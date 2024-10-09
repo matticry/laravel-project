@@ -30,7 +30,7 @@
                 <i class="fas fa-users mr-3"></i>
                 USUARIOS
             </a>
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="#">
+            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="{{ route('products.index') }}">
                 <i class="fas fa-box mr-3"></i>
                 PRODUCTOS
             </a>

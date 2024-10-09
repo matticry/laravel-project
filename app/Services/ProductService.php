@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Services\Interfaces\ProductServiceInterface;
 use Illuminate\Database\Eloquent\Collection;
@@ -66,6 +67,12 @@ class ProductService implements ProductServiceInterface
     {
         return Product::where('pro_name', $code)->exists();
     }
+
+    public function getCategoryById($id)
+    {
+        return Category::findOrFail($id);
+    }
+
 
 
 }
