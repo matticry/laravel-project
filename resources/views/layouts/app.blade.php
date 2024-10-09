@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body class="bg-blue-50">
 <div x-data="{ sidebarOpen: false }" class="flex h-screen bg-blue-50 font-roboto">
@@ -41,10 +42,14 @@
                 <i class="fas fa-calendar mr-3"></i>
                 CALENDARIO
             </a>
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="#">
-                <i class="fas fa-sign-out-alt mr-3"></i>
-                SALIR
-            </a>
+            <form action="{{ route('logout') }}" method="POST" class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900">
+                @csrf
+                <button type="submit">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    SALIR
+                </button>
+            </form>
+
         </nav>
     </div>
 

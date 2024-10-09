@@ -1,15 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const emailInput = document.getElementById('us_email');
+    const emailEmployeeInput = document.getElementById('email_emplo');
     const emailValidationMessage = document.getElementById('emailValidationMessage');
 
 
-    emailInput.addEventListener('blur', function() {
+    emailEmployeeInput.addEventListener('blur', function() {
         const email = this.value;
         if (email) {
             validateEmail(email);
         }
     });
 
+    /**
+     * Valida un correo electrónico utilizando la API de Hunter.
+     *
+     * @param {string} email - El correo electrónico a validar.
+     */
     function validateEmail(email) {
         const apiKey = '4a6256f760017b78ef5b7fe2056844ae29e85b1d';
         const url = `https://api.hunter.io/v2/email-verifier?email=${email}&api_key=${apiKey}`;

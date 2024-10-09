@@ -14,24 +14,13 @@
                 <a @click.prevent="activeTab = 'products'" :class="{'border-blue-500 text-blue-600': activeTab === 'products'}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300" >
                     Productos
                 </a>
-                <a @click.prevent="activeTab = 'services'" :class="{'border-blue-500 text-blue-600': activeTab === 'services'}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
-                    Servicios
+                <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300" >
+                    Empleados
                 </a>
                 <a @click.prevent="activeTab = 'categories'" :class="{'border-blue-500 text-blue-600': activeTab === 'categories'}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
                     Categorías
                 </a>
             </nav>
-        </div>
-
-        <!-- Contenido de las tabs -->
-        <div x-show="activeTab === 'products'" class="mt-6">
-            <h2 class="text-2xl font-semibold text-gray-900">Productos</h2>
-            <p class="mt-2">Aquí irá el contenido de la sección de Productos.</p>
-        </div>
-
-        <div x-show="activeTab === 'services'" class="mt-6">
-            <h2 class="text-2xl font-semibold text-gray-900">Servicios</h2>
-            <p class="mt-2">Aquí irá el contenido de la sección de Servicios.</p>
         </div>
 
         <div x-show="activeTab === 'categories'" class="mt-6">

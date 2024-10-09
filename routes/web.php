@@ -3,21 +3,19 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CedulaController;
+use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
-// Ruta de procesamiento de login
 Route::post('/login', [AuthController::class, 'login']);
 
-// Ruta de logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Grupo de rutas que requieren autenticación
 Route::middleware(['auth'])->group(function () {
-
-    // Ejemplo de rutas protegidas: categories
     Route::resource('categories', CategoryController::class);
+    Route::resource('employees', EmployeeController::class);
 });
 
 // Ruta por defecto que redirige al formulario de login
@@ -45,3 +43,5 @@ Route::get('/cedula/{cedula}', [CedulaController::class, 'obtenerDatos']);
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
+
+
