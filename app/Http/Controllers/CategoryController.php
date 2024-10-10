@@ -2,15 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Interfaces\CategoryServiceInterface;
 use Illuminate\Http\Request;
 
 use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    public function index()
+    protected $categoryService;
+
+    public function __construct(CategoryServiceInterface $categoryService)
     {
-        $categories = Category::all();
+        $this->categoryService = $categoryService;
+    }
+    public function index(Request $request)
+    {
+        $categories = $this->categoryService->getAllCategories();
+        if ($request->has('cat_name')) {
+            if ($request->has('cat_name') && $request->cat_name) {
+                $categories = $categories->filter(function ($category) use ($request) {
+                    return str_contains($category->cat_name, $request->cat_name);
+                });
+            }
+        }
+
         return view('categories.index', compact('categories'));
     }
 

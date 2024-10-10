@@ -9,19 +9,26 @@
     <div x-data="{ activeTab: 'employees', isModalOpen: false }" class="mb-6">
         <!-- Tabs de navegación -->
         <div class="border-b border-gray-200">
+
             <nav class="-mb-px flex">
+                @can('view.index.product')
                 <a href="{{ route('products.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
                     Productos
                 </a>
+                @endcan
                 <a @click.prevent="activeTab = 'employees'" :class="{'border-blue-500 text-blue-600': activeTab === 'employees'}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
                     Empleados
                 </a>
-                <a href="{{ route('categories.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
-                    Categorías
-                </a>
-                <a href="{{ route('services.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
-                    Servicios
-                </a>
+                @can('view.index.category')
+                    <a href="{{ route('categories.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
+                        Categorías
+                     </a>
+                @endcan
+                    @can('view.index.service')
+                        <a href="{{ route('services.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
+                            Servicios
+                        </a>
+                     @endcan
             </nav>
         </div>
         @if (session('success'))
@@ -41,24 +48,26 @@
         <!-- Contenido de cada sección -->
         <div x-show="activeTab === 'employees'" class="mt-6">
             <h2 class="text-2xl font-semibold text-gray-900">Empleados</h2>
+            @can('employee.store')
             <div class="mb-4 mt-4">
                 <button @click="isModalOpen = true" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
                     Crear Nuevo Empleado
                 </button>
             </div>
+            @endcan
             <div class="mb-4 mt-4 flex items-center space-x-4">
                 <!-- Formulario de búsqueda -->
                 <form action="{{ route('employees.index') }}" method="GET" class="flex space-x-2">
                     <!-- Campo para código de empleado -->
                     <div>
                         <label for="code_emplo" class="block text-sm font-medium text-gray-700">Código:</label>
-                        <input type="text" name="code_emplo" id="code_emplo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Filtrar por código" value="{{ request()->get('code_emplo') }}">
+                        <input type="text" name="code_emplo" autocomplete="off" id="code_emplo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Filtrar por código" value="{{ request()->get('code_emplo') }}">
                     </div>
 
                     <!-- Campo para nombre de empleado -->
                     <div>
                         <label for="name_emplo" class="block text-sm font-medium text-gray-700">Nombre:</label>
-                        <input type="text" name="name_emplo" id="name_emplo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Filtrar por nombre" value="{{ request()->get('name_emplo') }}">
+                        <input type="text" name="name_emplo"  id="name_emplo"  autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Filtrar por nombre" value="{{ request()->get('name_emplo') }}">
                     </div>
 
                     <!-- Botón para realizar la búsqueda -->
@@ -100,12 +109,16 @@
                                 </span>
                             </td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">
+                                @can('employee.update')
                                 <a href="{{ route('employees.edit', $employee->id_emplo) }}" class="text-blue-600 hover:text-blue-900 mr-2">Editar</a>
+                                @endcan
+                                @can('employee.destroy')
                                 <form action="{{ route('employees.destroy', $employee->id_emplo) }}" method="POST" class="inline-block">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Estás seguro de querer eliminar este empleado?')">Eliminar</button>
                                 </form>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

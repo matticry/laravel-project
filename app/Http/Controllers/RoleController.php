@@ -16,10 +16,18 @@ class RoleController extends Controller
         $this->roleService = $roleService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $permissions = Permission::all();
         $roles = $this->roleService->getAllRoles();
+
+        if ($request->has('rol_name')) {
+            if ($request->has('rol_name') && $request->rol_name) {
+                $roles = $roles->filter(function ($role) use ($request) {
+                    return str_contains($role->rol_name, $request->rol_name);
+                });
+            }
+        }
         return view('roles.index', compact('roles','permissions'));
 
     }

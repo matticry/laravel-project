@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\CategoryService;
 use App\Services\EmployeeService;
+use App\Services\Interfaces\CategoryServiceInterface;
 use App\Services\Interfaces\EmployeeServiceInterface;
 use App\Services\Interfaces\ProductServiceInterface;
 use App\Services\Interfaces\ProfileServiceInterface;
@@ -34,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TaskServiceInterface::class, TaskService::class);
         $this->app->bind(ProfileServiceInterface::class, ProfileService::class);
         $this->app->bind(RoleServiceInterface::class, RoleService::class);
+        $this->app->bind(CategoryServiceInterface::class, CategoryService::class);
 
 
 

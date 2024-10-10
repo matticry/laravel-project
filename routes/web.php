@@ -37,17 +37,15 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('calendario', CalendarioController::class);
 });
 
-// Ruta por defecto que redirige al formulario de login
 Route::get('/', function () {
     return view('auth.login');
-})->name('home');  // Añadir un nombre a esta ruta podría ser útil.
+})->name('home');  // Dirige al home
 
 // Ruta para recuperar contraseña
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->name('password.request');
 
-// Ruta para la vista de registro
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
@@ -60,8 +58,35 @@ Route::get('/cedula/{cedula}', [CedulaController::class, 'obtenerDatos']);
 Route::get('/user/{id}', [CedulaController::class, 'getInfoUserById']);
 
 
-// Ruta para autenticar con Google
+// Ruta para tener el permiso de actualizar el perfil
+Route::put('/{id}/update', [ProfileController::class, 'update'])->middleware('permission:profile.update')->name('profile.update');
+Route::delete('/{id}/destroy', [ProfileController::class, 'destroy'])->middleware('permission:profile.destroy')->name('profile.destroy');
+Route::post('/store', [ProfileController::class, 'store'])->middleware('permission:profile.store')->name('profile.store');
+Route::get('/profile', [ProfileController::class, 'index'])->middleware('permission:view.index.profile')->name('profile.index');
 
+//Ruta para tener permisos de roles
+Route::put('/{id}/update', [RoleController::class, 'update'])->middleware('permission:role.update')->name('role.update');
+Route::delete('/{id}/destroy', [RoleController::class, 'destroy'])->middleware('permission:role.destroy')->name('role.destroy');
+Route::post('/store', [RoleController::class, 'store'])->middleware('permission:role.store')->name('role.store');
+Route::get('/role', [RoleController::class, 'index'])->middleware('permission:view.index.role')->name('role.index');
+
+//Ruta para tener permisos de productos
+Route::put('/{id}/update', [ProductController::class, 'update'])->middleware('permission:product.update')->name('product.update');
+Route::delete('/{id}/destroy', [ProductController::class, 'destroy'])->middleware('permission:product.destroy')->name('product.destroy');
+Route::post('/store', [ProductController::class, 'store'])->middleware('permission:product.store')->name('product.store');
+Route::get('/product', [ProductController::class, 'index'])->middleware('permission:view.index.product')->name('product.index');
+
+//Ruta para tener permisos para los employees
+Route::put('/{id}/update', [EmployeeController::class, 'update'])->middleware('permission:employee.update')->name('employee.update');
+Route::delete('/{id}/destroy', [EmployeeController::class, 'destroy'])->middleware('permission:employee.destroy')->name('employee.destroy');
+Route::post('/store', [EmployeeController::class, 'store'])->middleware('permission:employee.store')->name('employee.store');
+Route::get('/employee', [EmployeeController::class, 'index'])->middleware('permission:view.index.employee')->name('employee.index');
+
+//Ruta para tener permisos para los services
+Route::put('/{id}/update', [ServiceController::class, 'update'])->middleware('permission:service.update')->name('service.update');
+Route::delete('/{id}/destroy', [ServiceController::class, 'destroy'])->middleware('permission:service.destroy')->name('service.destroy');
+Route::post('/store', [ServiceController::class, 'store'])->middleware('permission:service.store')->name('service.store');
+Route::get('/service', [ServiceController::class, 'index'])->middleware('permission:view.index.service')->name('service.index');
 
 // Ruta de dashboard protegida (requiere autenticación)
 Route::get('/dashboard', function () {

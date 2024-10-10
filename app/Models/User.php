@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -32,4 +34,18 @@ class User extends Authenticatable
     {
         return 'us_dni';
     }
+    public function hasPermission($permissionName): bool
+    {
+        foreach ($this->roles as $role) {
+            if ($role->permissions->contains('perm_name', $permissionName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'tbl_rol_user', 'us_id', 'role_id');
+    }
+
 }

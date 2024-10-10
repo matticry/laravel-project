@@ -13,15 +13,21 @@
                 <a @click.prevent="activeTab = 'products'" :class="{'border-blue-500 text-blue-600': activeTab === 'products'}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300" >
                     Productos
                 </a>
-                <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
-                    Empleados
-                </a>
-                <a href="{{ route('categories.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
-                    Categorías
-                </a>
-                <a href="{{ route('services.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
-                    Servicios
-                </a>
+                @can('view.index.employee')
+                    <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
+                        Empleados
+                    </a>
+                @endcan
+                @can('view.index.category')
+                    <a href="{{ route('categories.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
+                        Categorías
+                    </a>
+                @endcan
+                @can('view.index.service')
+                    <a href="{{ route('services.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
+                        Servicios
+                    </a>
+                @endcan
             </nav>
         </div>
 
@@ -41,18 +47,24 @@
 
         <!-- Contenido de la sección de productos -->
         <div x-show="activeTab === 'products'" class="mt-6">
-            <h2 class="text-2xl font-semibold text-gray-900">Productos</h2>
-            <div class="mb-4 mt-4">
-                <button @click="isModalOpen = true" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                    Crear Nuevo Producto
-                </button>
-            </div>
+            <h2 class="text-2xl font-semibold text-gray-900">Gestión de Productos</h2>
+            @can('product.store')
+                <div class="mb-4 mt-4">
+                    <button @click="isModalOpen = true" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                        Crear Nuevo Producto
+                    </button>
+                </div>
+            @endcan
             <div class="mb-4 mt-4 flex items-center space-x-4">
                 <!-- Formulario de búsqueda -->
                 <form action="{{ route('products.index') }}" method="GET" class="flex space-x-2">
                     <div>
-                        <label for="pro_name" class="block text-sm font-medium text-gray-700">Nombre:</label>
-                        <input type="text" name="pro_name" id="pro_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Filtrar por nombre" value="{{ request()->get('pro_name') }}">
+                        <label for="pro_name" class="block text-sm font-medium text-gray-700">Nombre del Producto:</label>
+                        <input type="text" name="pro_name" id="pro_name" autocomplete="off" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Filtrar por nombre" value="{{ request()->get('pro_name') }}">
+                    </div>
+                    <div>
+                        <label for="pro_code" class="block text-sm font-medium text-gray-700">Código de Producto:</label>
+                        <input type="text" name="pro_code" autocomplete="off" id="pro_code" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Filtrar por nombre" value="{{ request()->get('pro_name') }}">
                     </div>
                     <div>
                         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-4 rounded focus:outline-none focus:shadow-outline">
@@ -68,9 +80,10 @@
                 <table class="border-collapse table-auto w-full whitespace-no-wrap bg-white table-striped relative">
                     <thead>
                     <tr class="text-left">
+                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Numero del Producto</th>
+                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Código del Producto</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Imagen</th>
-                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">ID</th>
-                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Nombre</th>
+                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Nombre del Producto</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Cantidad</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Precio Unitario</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Estado</th>
@@ -81,6 +94,8 @@
                     <tbody>
                     @foreach($products as $product)
                         <tr>
+                            <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->pro_id }}</td>
+                            <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->pro_code }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">
                                 @if($product->pro_image)
                                     <img src="{{ asset('storage/' . $product->pro_image) }}" alt="{{ $product->pro_name }}" class="h-12 w-12 object-cover rounded-full">                                @else
@@ -89,7 +104,6 @@
                                     </div>
                                 @endif
                             </td>
-                            <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->pro_id }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->pro_name }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->pro_amount }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->pro_unit_price }}</td>
@@ -100,12 +114,34 @@
                             </td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->category->cat_name ?? 'N/A' }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">
-                                <a href="{{ route('products.edit', $product->pro_id) }}" class="text-blue-600 hover:text-blue-900 mr-2">Editar</a>
-                                <form action="{{ route('products.destroy', $product->pro_id) }}" method="POST" class="inline-block">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Estás seguro de querer eliminar este producto?')">Eliminar</button>
-                                </form>
+                                <div class="flex space-x-2">
+                                    @can('product.update')
+                                        <a href="{{ route('products.edit', $product->pro_id) }}"
+                                           class="bg-green-100 text-green-600 hover:bg-green-200 rounded-full p-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                            </svg>
+                                        </a>
+                                    @endcan
+                                    @can('product.destroy')
+                                        <form action="{{ route('products.destroy', $product->pro_id) }}" method="POST"
+                                              class="inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="bg-red-100 text-red-600 hover:bg-red-200 rounded-full p-2"
+                                                    onclick="return confirm('¿Estás seguro de querer eliminar este rol?')">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endcan
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -129,19 +165,24 @@
                                 @csrf
                                 <div class="mb-4">
                                     <label for="pro_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
-                                    <input type="text" name="pro_name" id="pro_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                    <input type="text" name="pro_name" id="pro_name" placeholder="Ingrese el nombre del producto" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                                 </div>
                                 <div class="mb-4">
                                     <label for="pro_amount" class="block text-gray-700 text-sm font-bold mb-2">Cantidad:</label>
-                                    <input type="number" name="pro_amount" id="pro_amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                    <input type="number" name="pro_amount" placeholder="Ingrese la cantidad" id="pro_amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                                 </div>
-                                <div class="mb-4">
+                                <div class="relative mb-4">
                                     <label for="pro_unit_price" class="block text-gray-700 text-sm font-bold mb-2">Precio Unitario:</label>
-                                    <input type="number" step="0.01" name="pro_unit_price" id="pro_unit_price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 mt-7">$</span>
+                                    <input type="number"  step="0.01" name="pro_unit_price" id="pro_unit_price"
+                                           class="block w-full pl-7 pr-20 rounded-md border border-gray-300 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"
+                                           placeholder="0.00" required>
+                                    <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 mt-7">USD</span>
                                 </div>
+
                                 <div class="mb-4">
                                     <label for="pro_description" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
-                                    <textarea name="pro_description" id="pro_description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                                    <textarea name="pro_description" id="pro_description" placeholder="Ingrese la descripción" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
                                 </div>
                                 <div class="mb-4">
                                     <label for="cat_id" class="block text-gray-700 text-sm font-bold mb-2">Categoría:</label>

@@ -10,6 +10,7 @@
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
+
 <body class="bg-blue-50">
 <div x-data="{ sidebarOpen: false }" class="flex h-screen bg-blue-50 font-roboto">
     <!-- Sidebar -->
@@ -23,23 +24,23 @@
         </div>
 
         <nav class="mt-10">
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="#">
+            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('dashboard') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('dashboard') }}">
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 DASHBOARD
             </a>
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="{{ route('profile.index') }}">
-                <i class="fas fa-users mr-3"></i>
-                USUARIOS
-            </a>
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="{{ route('products.index') }}">
-                <i class="fas fa-box mr-3"></i>
-                PRODUCTOS
-            </a>
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="#">
-                <i class="fas fa-clipboard-list mr-3"></i>
-                ORDENES DE TRABAJO
-            </a>
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="{{ route('calendario.index') }}">
+            @can('view.index.profile')
+                <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('profile.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('profile.index') }}">
+                    <i class="fas fa-users mr-3"></i>
+                    USUARIOS
+                </a>
+            @endcan
+            @can('view.index.product')
+                <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('products.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('products.index') }}">
+                    <i class="fas fa-box mr-3"></i>
+                    PRODUCTOS
+                </a>
+            @endcan
+            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('calendario.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('calendario.index') }}">
                 <i class="fas fa-calendar mr-3"></i>
                 CALENDARIO
             </a>
@@ -50,7 +51,6 @@
                     SALIR
                 </button>
             </form>
-
         </nav>
     </div>
 

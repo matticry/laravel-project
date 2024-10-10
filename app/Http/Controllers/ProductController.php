@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Services\Interfaces\ProductServiceInterface;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Nette\Schema\ValidationException;
 
 class ProductController extends Controller
 {
@@ -55,7 +57,7 @@ class ProductController extends Controller
                 'pro_image' => 'nullable|image|max:2048',
                 'cat_id' => 'required|exists:tbl_category,cat_id',
             ]);
-
+            $validatedData['pro_code'] = Product::generateProductCode();
             if ($request->hasFile('pro_image')) {
                 $validatedData['pro_image'] = $request->file('pro_image')->store('profile_images', 'public');
             }
@@ -66,8 +68,13 @@ class ProductController extends Controller
                 return back()->withErrors(['pro_code' => 'No se pudo crear el producto.'])->withInput();
             }
             return redirect()->route('products.index')->with('success', 'Producto creado con éxito.');
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
+        } catch (ValidationException $e) {
+            $errors = $e->validator->errors()->toArray();
+            $errorMessage = "Introduce bien estos datos:\n";
+            foreach ($errors as $key => $value) {
+                $errorMessage .= $key . ": " . $value[0] . "\n";
+                return back()->withErrors(['pro_code' => $errorMessage])->withInput();
+            }
             return back()->withErrors(['pro_code' => 'No se pudo crear el producto.'])->withInput();
         }
     }
@@ -111,6 +118,6 @@ class ProductController extends Controller
         if (!$product) {
             return back()->withErrors(['pro_code' => 'No se pudo eliminar el producto.'])->withInput();
         }
-        return redirect()->route('products.index')->with('success', 'Producto eliminado con plaisio.');
+        return redirect()->route('products.index')->with('success', 'Producto eliminado con éxito.');
     }
 }

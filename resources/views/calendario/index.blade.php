@@ -5,87 +5,87 @@
 @section('header', 'Gestión de Calendario')
 
 @section('content')
-    <div x-data="{ isModalOpen: false }" class="container mx-auto px-4 py-8">
-        <div class="flex justify-end mb-4">
-            <button @click="isModalOpen = true" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                CREAR ORDEN DE TRABAJO
-            </button>
+    <div x-data="{
+        activeTab: 'categories',
+        isModalOpen: false,
+    }" class="mb-6">
+        <div class="border-b border-blue-200">
+            <nav class="-mb-px flex">
+                <a href="{{ route('products.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
+                    Calendario
+                </a>
+                <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
+                    Ordenes de Trabajo
+                </a>
+                <a @click.prevent="activeTab = 'categories'" :class="{'border-blue-500 text-blue-800': activeTab === 'categories'}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
+                    Reporte de Técnicos
+                </a>
+            </nav>
         </div>
-        <!-- Modal -->
-        <div x-show="isModalOpen"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 transform -translate-y-4"
-             x-transition:enter-end="opacity-100 transform translate-y-0"
-             x-transition:leave="transition ease-in duration-300"
-             x-transition:leave-start="opacity-100 transform translate-y-0"
-             x-transition:leave-end="opacity-0 transform -translate-y-4"
-             class="fixed inset-0 z-50 overflow-y-auto"
-             aria-labelledby="modal-title"
-             role="dialog"
-             aria-modal="true">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                                    Crear Nueva Orden de Trabajo
-                                </h3>
-                                <div class="mt-2">
-                                    <p class="text-sm text-gray-500">
-                                        Aquí puedes agregar el formulario para crear una nueva orden de trabajo.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            Guardar
-                        </button>
-                        <button @click="isModalOpen = false" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                            Cancelar
-                        </button>
-                    </div>
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex justify-end mb-4">
+                <x-bladewind::button
+                    show_close_icon="true"
+                    onclick="showModal('crear-orden-trabajo')">
+                    CREAR ORDEN DE TRABAJO
+                </x-bladewind::button>
+            </div>
+            <x-bladewind::modal
+                name="crear-orden-trabajo"
+                title="Crear Nueva Orden de Trabajo">
+                <p class="text-sm text-gray-500">
+                    Aquí puedes agregar el formulario para crear una nueva orden de trabajo.
+                </p>
+                <!-- Aquí puedes agregar el formulario para crear una nueva orden de trabajo -->
+                <div class="mt-4 flex justify-end">
+                    <x-bladewind::button
+                        color="blue"
+                        onclick="saveOrdenTrabajo()">
+                        Guardar
+                    </x-bladewind::button>
+                </div>
+            </x-bladewind::modal>
+            <div class="flex justify-between mb-6 text-sm">
+                <div class="flex items-center bg-blue-100 rounded-lg px-4 py-2">
+                    <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    <span class="font-semibold text-gray-700">Ordenes de trabajo: 1247</span>
+                </div>
+                <div class="flex items-center bg-purple-100 rounded-lg px-4 py-2">
+                    <svg class="w-5 h-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="font-semibold text-gray-700">Ordenes pendientes: 123</span>
+                </div>
+                <div class="flex items-center bg-green-50 rounded-lg px-4 py-2">
+                    <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="font-semibold text-gray-700">Active Posts: 4</span>
+                </div>
+                <div class="flex items-center bg-yellow-50 rounded-lg px-4 py-2">
+                    <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="font-semibold text-gray-700">Scheduled Posts: 2</span>
                 </div>
             </div>
+            <div id="calendar" class="bg-blue-100 rounded-lg shadow-lg overflow-hidden"></div>
         </div>
-        <div class="flex justify-between mb-6 text-sm">
-            <div class="flex items-center bg-blue-100 rounded-lg px-4 py-2">
-                <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                </svg>
-                <span class="font-semibold text-gray-700">Ordenes de trabajo: 1247</span>
-            </div>
-            <div class="flex items-center bg-purple-100 rounded-lg px-4 py-2">
-                <svg class="w-5 h-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span class="font-semibold text-gray-700">Ordenes pendientes: 123</span>
-            </div>
-            <div class="flex items-center bg-green-50 rounded-lg px-4 py-2">
-                <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span class="font-semibold text-gray-700">Active Posts: 4</span>
-            </div>
-            <div class="flex items-center bg-yellow-50 rounded-lg px-4 py-2">
-                <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                <span class="font-semibold text-gray-700">Scheduled Posts: 2</span>
-            </div>
-        </div>
-        <div id="calendar" class="bg-blue-100 rounded-lg shadow-lg overflow-hidden"></div>
     </div>
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js'></script>
+
     <script>
+        function saveOrdenTrabajo() {
+            // Aquí puedes agregar la lógica para guardar la orden de trabajo
+            // Por ejemplo, enviar una solicitud AJAX al servidor
+            // Luego, cerrar el modal
+            hideModal('crear-orden-trabajo');
+        }
+    </script>
+
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {

@@ -9,15 +9,21 @@
         <!-- Tabs de navegación -->
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex">
-                <a href="{{ route('products.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
-                    Productos
-                </a>
-                <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
-                    Empleados
-                </a>
-                <a href="{{ route('categories.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
-                    Categorías
-                </a>
+                @can('view.index.product')
+                    <a href="{{ route('products.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
+                        Productos
+                    </a>
+                @endcan
+                @can('view.index.employee')
+                    <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
+                        Empleados
+                    </a>
+                @endcan
+                @can('view.index.category')
+                    <a href="{{ route('categories.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
+                        Categorías
+                    </a>
+                @endcan
                 <a @click.prevent="activeTab = 'services'" :class="{'border-blue-500 text-blue-600': activeTab === 'services'}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300" >
                     Servicios
                 </a>
@@ -41,11 +47,13 @@
         <!-- Contenido de la sección de servicios -->
         <div x-show="activeTab === 'services'" class="mt-6">
             <h2 class="text-2xl font-semibold text-gray-900">Servicios</h2>
-            <div class="mb-4 mt-4">
-                <button @click="isModalOpen = true; tasks = []" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                    Crear Nuevo Servicio
-                </button>
-            </div>
+            @can('service.store')
+                <div class="mb-4 mt-4">
+                    <button @click="isModalOpen = true; tasks = []" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                        Crear Nuevo Servicio
+                    </button>
+                </div>
+            @endcan
             <div class="mb-4 mt-4 flex items-center space-x-4">
                 <!-- Formulario de búsqueda -->
                 <form action="{{ route('services.index') }}" method="GET" class="flex space-x-2">
@@ -67,7 +75,7 @@
                 <table class="border-collapse table-auto w-full whitespace-no-wrap bg-white table-striped relative">
                     <thead>
                     <tr class="text-left">
-                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">ID</th>
+                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Numero del Servicio</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Nombre</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Descripción</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Precio</th>
@@ -101,12 +109,34 @@
                                 @endif
                             </td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">
-                                <a href="{{ route('services.edit', $service->id_serv) }}" class="text-blue-600 hover:text-blue-900 mr-2">Editar</a>
-                                <form action="{{ route('services.destroy', $service->id_serv) }}" method="POST" class="inline-block">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Estás seguro de querer eliminar este servicio?')">Eliminar</button>
-                                </form>
+                                <div class="flex space-x-2">
+                                    @can('service.update')
+                                        <a href="{{ route('services.edit', $service->id_serv) }}"
+                                           class="bg-green-100 text-green-600 hover:bg-green-200 rounded-full p-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                            </svg>
+                                        </a>
+                                    @endcan
+                                    @can('service.destroy')
+                                        <form action="{{ route('services.destroy', $service->id_serv) }}" method="POST"
+                                              class="inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="bg-red-100 text-red-600 hover:bg-red-200 rounded-full p-2"
+                                                    onclick="return confirm('¿Estás seguro de querer eliminar este servicio?')">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endcan
+                                </div>
                             </td>
                         </tr>
                     @endforeach

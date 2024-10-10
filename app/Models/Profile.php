@@ -33,4 +33,5 @@ class Profile extends Model
     {
         return !is_null($this->email_verified_at);
     }
+
 }

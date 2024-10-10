@@ -38,7 +38,7 @@
 
         <!-- Contenido de cada sección -->
         <div x-show="activeTab === 'roles'" class="mt-6">
-            <h2 class="text-2xl font-semibold text-gray-900">Usuarios</h2>
+            <h2 class="text-2xl font-semibold text-gray-900">Roles y Permisos</h2>
             <div class="mb-4 mt-4">
                 <button @click="activeModal = 'create'"
                         class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
@@ -48,14 +48,12 @@
             <div class="mb-4 mt-4 flex items-center space-x-4">
                 <!-- Formulario de búsqueda -->
                 <form action="{{ route('roles.index') }}" method="GET" class="flex space-x-2">
-                    <!-- Campo para código de empleado -->
 
-                    <!-- Campo para nombre de empleado -->
                     <div>
-                        <label for="name_emplo" class="block text-sm font-medium text-gray-700">Nombre:</label>
-                        <input type="text" name="name_emplo" id="name_emplo"
+                        <label for="rol_name" class="block text-sm font-medium text-gray-700">Nombre del Rol:</label>
+                        <input type="text" name="rol_name" id="rol_name"
                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                               placeholder="Filtrar por nombre" value="{{ request()->get('name_emplo') }}">
+                               placeholder="Filtrar por nombre" value="{{ request()->get('rol_name') }}">
                     </div>
 
                     <!-- Botón para realizar la búsqueda -->

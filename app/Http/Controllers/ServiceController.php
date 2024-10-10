@@ -14,9 +14,16 @@ class ServiceController extends Controller
         $this->serviceService = $serviceService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $services = $this->serviceService->getAllServices();
+        if ($request->has('name_serv')) {
+            if ($request->has('name_serv') && $request->name_serv) {
+                $services = $services->filter(function ($service) use ($request) {
+                    return str_contains($service->name_serv, $request->name_serv);
+                });
+            }
+        }
         return view('services.index', compact('services'));
     }
 
