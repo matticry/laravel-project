@@ -79,7 +79,7 @@ class EmployeeController extends Controller
             return redirect()->route('employees.index')->with('success', 'Usuario registrado exitosamente');
         }catch (Exception $e) {
             Log::error('Error al registrar el usuario: '. $e->getMessage());
-            return back()->with('error', 'Error al registrar el usuario por parte del servidor')->withInput();
+            return back()->withErrors('error', 'Error al registrar el usuario por parte del servidor')->withInput();
         }
 
     }

@@ -14,13 +14,14 @@ class User extends Authenticatable
 
     protected $fillable = [
         'us_name', 'us_lastName', 'us_image', 'us_address', 'us_dni',
-        'us_first_phone', 'us_second_phone', 'us_email', 'us_password', 'us_status'
+        'us_first_phone', 'us_second_phone', 'us_email', 'us_password', 'us_status','google_id'
     ];
 
     protected $hidden = ['us_password'];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'google_id' => 'string'
     ];
 
     public function getAuthPassword()

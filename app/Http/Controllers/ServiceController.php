@@ -65,7 +65,6 @@ class ServiceController extends Controller
             'status_serv' => 'required|in:A,I',
             'tasks' => 'required|array',
             'tasks.*.name_task' => 'required|max:250',
-            'tasks.*.status_task' => 'required|in:A,I',
         ]);
 
         $serviceData = [
@@ -78,7 +77,6 @@ class ServiceController extends Controller
         $tasksData = array_map(function ($task) {
             return [
                 'name_task' => $task['name_task'],
-                'status_task' => $task['status_task'],
             ];
         }, $validatedData['tasks']);
 

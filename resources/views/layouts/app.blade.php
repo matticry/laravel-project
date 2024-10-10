@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body class="bg-blue-50">
@@ -17,7 +18,7 @@
     <div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'" class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-blue-100 overflow-y-auto lg:translate-x-0 lg:static lg:inset-0">
         <div class="flex items-center justify-center mt-8">
             <div class="flex items-center">
-                <span class="text-2xl font-semibold text-blue-800">Dashboard</span>
+                <span class="text-2xl font-semibold text-blue-800">Limpieza Inteligente</span>
             </div>
         </div>
 
@@ -26,7 +27,7 @@
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 DASHBOARD
             </a>
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="#">
+            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="{{ route('profile.index') }}">
                 <i class="fas fa-users mr-3"></i>
                 USUARIOS
             </a>
@@ -38,7 +39,7 @@
                 <i class="fas fa-clipboard-list mr-3"></i>
                 ORDENES DE TRABAJO
             </a>
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="#">
+            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900" href="{{ route('calendario.index') }}">
                 <i class="fas fa-calendar mr-3"></i>
                 CALENDARIO
             </a>
@@ -65,8 +66,11 @@
 
             <div class="flex items-center">
                 <div x-data="{ dropdownOpen: false }" class="relative">
-                    <button @click="dropdownOpen = ! dropdownOpen" class="relative block h-8 w-8 rounded-full overflow-hidden shadow focus:outline-none">
-                        <img class="h-full w-full object-cover" src="https://images.unsplash.com/photo-1528892952291-009c663ce843?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=296&q=80" alt="Your avatar">
+                    <button @click="dropdownOpen = ! dropdownOpen" class="flex items-center space-x-2 relative block h-8 overflow-hidden shadow focus:outline-none">
+                        <img class="h-8 w-8 rounded-full object-cover"
+                             src="{{ Auth::user()->us_image ? asset('storage/' . Auth::user()->us_image) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->us_name) }}"
+                             alt="Foto de perfil">
+                        <span class="text-blue-700">{{ Auth::user()->us_name }}</span>
                     </button>
 
                     <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 h-full w-full z-10"></div>
@@ -74,10 +78,14 @@
                     <div x-show="dropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10">
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">Perfil</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">Configuración</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">Salir</a>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">Salir</button>
+                        </form>
                     </div>
                 </div>
             </div>
+
         </header>
 
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-blue-50">

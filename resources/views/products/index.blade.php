@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <div x-data="{ activeTab: 'products', isModalOpen: false }" class="mb-6">
+        <div x-data="{ activeTab: 'products', isModalOpen: false }" class="mb-6">
         <!-- Tabs de navegación -->
         <div class="border-b border-gray-200">
             <nav class="-mb-px flex">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Services\Interfaces\UserServiceInterface;
 use Exception;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -17,6 +19,37 @@ class AuthController extends Controller
     public function __construct(UserServiceInterface $userService)
     {
         $this->userService = $userService;
+    }
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        try {
+            $user = Socialite::driver('google')->user();
+            $finduser = User::where('google_id', $user->id)->first();
+
+            if ($finduser) {
+                Auth::login($finduser);
+                return redirect()->intended('categories');
+            } else {
+                $newUser = User::create([
+                    'us_name' => $user->name,
+                    'us_email' => $user->email,
+                    'us_image' => $googleUser->avatar, // URL de la imagen de perfil
+                    'google_id' => $user->id,
+                    'us_password' => encrypt('123456dummy'),
+                    'us_status' => 'A',
+                ]);
+
+                Auth::login($newUser);
+                return redirect()->intended('categories');
+            }
+        } catch (Exception $e) {
+            dd($e->getMessage());
+        }
     }
 
     public function register(Request $request)
