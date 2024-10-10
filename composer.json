@@ -13,7 +13,7 @@
         "laravel/scout": "^9.8",
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.5",
-        "mkocansey/bladewind": "*"
+        "mkocansey/bladewind": "^2.7"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

@@ -23,28 +23,7 @@
             </nav>
         </div>
         <div class="container mx-auto px-4 py-8">
-            <div class="flex justify-end mb-4">
-                <x-bladewind::button
-                    show_close_icon="true"
-                    onclick="showModal('crear-orden-trabajo')">
-                    CREAR ORDEN DE TRABAJO
-                </x-bladewind::button>
-            </div>
-            <x-bladewind::modal
-                name="crear-orden-trabajo"
-                title="Crear Nueva Orden de Trabajo">
-                <p class="text-sm text-gray-500">
-                    Aquí puedes agregar el formulario para crear una nueva orden de trabajo.
-                </p>
-                <!-- Aquí puedes agregar el formulario para crear una nueva orden de trabajo -->
-                <div class="mt-4 flex justify-end">
-                    <x-bladewind::button
-                        color="blue"
-                        onclick="saveOrdenTrabajo()">
-                        Guardar
-                    </x-bladewind::button>
-                </div>
-            </x-bladewind::modal>
+
             <div class="flex justify-between mb-6 text-sm">
                 <div class="flex items-center bg-blue-100 rounded-lg px-4 py-2">
                     <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -78,13 +57,6 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js'></script>
 
     <script>
-        function saveOrdenTrabajo() {
-            // Aquí puedes agregar la lógica para guardar la orden de trabajo
-            // Por ejemplo, enviar una solicitud AJAX al servidor
-            // Luego, cerrar el modal
-            hideModal('crear-orden-trabajo');
-        }
-    </script>
 
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');

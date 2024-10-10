@@ -9,6 +9,11 @@
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="{{ asset('vendor/bladewind/css/animate.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/bladewind/css/bladewind-ui.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/bladewind/css/animate.min.css') }}" rel="stylesheet" />
+
+
 </head>
 
 <body class="bg-blue-50">
@@ -96,4 +101,7 @@
     </div>
 </div>
 </body>
+<script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
+<script src="{{ asset('vendor/bladewind/js/bladewind-ui.min.js') }}"></script>
+<script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
 </html>
