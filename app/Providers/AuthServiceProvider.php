@@ -106,6 +106,19 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('employee.store', function ($user) {
             return $user->hasPermission('employee.store');
         });
+        Gate::define('button.add.client', function ($user) {
+            return $user->hasPermission('button.add.client');
+        });
+        Gate::define('button.add.service', function ($user) {
+            return $user->hasPermission('button.add.service');
+        });
+        Gate::define('button.upload.signature', function ($user) {
+            return $user->hasPermission('button.upload.signature');
+        });
+        Gate::define('button.signature', function ($user) {
+            return $user->hasPermission('button.signature');
+        });
+
 
     }
 }

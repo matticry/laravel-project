@@ -161,6 +161,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Mkocansey\Bladewind\BladewindServiceProvider::class,
+
 
         /*
          * Package Service Providers...

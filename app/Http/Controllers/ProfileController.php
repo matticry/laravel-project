@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Profile;
 use App\Models\Role;
 use App\Services\Interfaces\ProfileServiceInterface;
 use Illuminate\Http\Request;
@@ -100,5 +101,7 @@ class ProfileController extends Controller
         }
         return redirect()->route('profile.index')->with('success', 'Usuario eliminado correctamente');
     }
+
+
 
 }

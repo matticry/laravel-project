@@ -76,7 +76,6 @@ class AuthController extends Controller
                 $newUser = User::create([
                     'us_name' => $user->name,
                     'us_email' => $user->email,
-                    'us_image' => $googleUser->avatar, // URL de la imagen de perfil
                     'google_id' => $user->id,
                     'us_password' => encrypt('123456dummy'),
                     'us_status' => 'A',

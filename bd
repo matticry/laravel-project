@@ -1,0 +1,352 @@
+create table migrations
+(
+    id        int unsigned auto_increment
+        primary key,
+    migration varchar(255) not null,
+    batch     int          not null
+)
+    collate = utf8mb4_unicode_ci;
+
+create table provincia
+(
+    id_provincia          int auto_increment
+        primary key,
+    nombre_provincia      varchar(255)                    null,
+    capital_provincia     varchar(255)                    null,
+    descripcion_provincia varchar(1000)                   null,
+    poblacion_provincia   decimal(10, 2) default 0.00     null,
+    superficie_provincia  decimal(10, 2)                  null,
+    latitud_provincia     decimal(9, 6)  default 0.000000 null,
+    longitud_provincia    decimal(9, 6)  default 0.000000 null,
+    id_region             int                             null
+);
+
+create index provincia_tbl_region_id_region_fk
+    on provincia (id_region);
+
+create table tbl_category
+(
+    cat_id          int auto_increment
+        primary key,
+    cat_name        varchar(255)         null,
+    cat_status      tinyint(1) default 1 null,
+    cat_description varchar(255)         null,
+    created_at      timestamp            null,
+    updated_at      timestamp            null
+);
+
+create table tbl_detail_work_order
+(
+    dwo_id       int auto_increment
+        primary key,
+    wo_id        varchar(32)    null,
+    pro_id       int            null,
+    dwo_amount   int            null,
+    dwo_subtotal decimal(10, 2) null
+);
+
+create index tbl_detail_work_order_tbl_product_pro_id_fk
+    on tbl_detail_work_order (pro_id);
+
+create index tbl_detail_work_order_tbl_work_order_po_order_code_fk
+    on tbl_detail_work_order (wo_id);
+
+create table tbl_employee
+(
+    id_emplo          int auto_increment
+        primary key,
+    name_emplo        varchar(255)                         null,
+    last_name_emplo   varchar(255)                         null,
+    dni_emplo         varchar(10)                          null,
+    id_provincia      int                                  null,
+    birthdate_emplo   timestamp                            null,
+    email_emplo       varchar(255)                         null,
+    description_emplo varchar(255)                         null,
+    image_emplo       varchar(255)                         null,
+    created_at_emplo  timestamp  default CURRENT_TIMESTAMP null,
+    status_emplo      char       default 'R'               null,
+    code_emplo        varchar(5) default '0'               null
+);
+
+create index tbl_employee_provincia_id_provincia_fk
+    on tbl_employee (id_provincia);
+
+create table tbl_labor_data
+(
+    id_labor          int auto_increment
+        primary key,
+    date_entry_labor  timestamp                      null,
+    id_post           int                            null,
+    id_provincia      int                            null,
+    salaray_labor     decimal(10, 2)                 null,
+    part_time_labor   enum ('si', 'no') default 'no' null,
+    description_labor varchar(255)                   null
+);
+
+create table tbl_permission
+(
+    perm_id   int auto_increment
+        primary key,
+    perm_name varchar(255) null
+);
+
+create table tbl_product
+(
+    pro_id          int auto_increment
+        primary key,
+    pro_name        varchar(255)     null,
+    pro_amount      int              null,
+    pro_unit_price  decimal(10, 2)   null,
+    pro_status      char default 'A' null,
+    pro_description varchar(255)     null,
+    pro_image       varchar(255)     null,
+    cat_id          int              null,
+    pro_code        varchar(10)      null
+);
+
+create index tbl_product_tbl_category_cat_id_fk
+    on tbl_product (cat_id);
+
+create table tbl_region
+(
+    id_region     int auto_increment
+        primary key,
+    nombre_region varchar(255) null
+);
+
+create table tbl_report
+(
+    id_report               int auto_increment
+        primary key,
+    description_report      varchar(200) null,
+    image_report            varchar(250) null,
+    signature_report        blob         null,
+    id_work_order           int          null,
+    image_before_report     varchar(250) null,
+    pdf_report              blob         null,
+    signature_client_report blob         null
+);
+
+create index tbl_report_tbl_work_order_wo_id_fk
+    on tbl_report (id_work_order);
+
+create table tbl_reporte
+(
+    id_reporte         int auto_increment
+        primary key,
+    pdf_reporte        blob                                null,
+    created_at_reporte timestamp default CURRENT_TIMESTAMP null
+);
+
+create table tbl_rol_user
+(
+    ru_id   int auto_increment
+        primary key,
+    us_id   int null,
+    role_id int null
+);
+
+create index tbl_rol_user_tbl_role_rol_id_fk
+    on tbl_rol_user (role_id);
+
+create index tbl_rol_user_tbl_user_us_id_fk
+    on tbl_rol_user (us_id);
+
+create table tbl_role
+(
+    rol_id     int auto_increment
+        primary key,
+    rol_name   varchar(255)     null,
+    rol_status char default 'A' null
+);
+
+create table tbl_role_permission
+(
+    rp_id   int auto_increment
+        primary key,
+    role_id int null,
+    perm_id int null
+);
+
+create index tbl_role_permission_tbl_permission_perm_id_fk
+    on tbl_role_permission (perm_id);
+
+create index tbl_role_permission_tbl_role_rol_id_fk
+    on tbl_role_permission (role_id);
+
+create table tbl_service
+(
+    id_serv          int auto_increment
+        primary key,
+    name_serv        varchar(250)                        not null,
+    description_serv varchar(200)                        not null,
+    created_serv     timestamp default CURRENT_TIMESTAMP null,
+    status_serv      char      default 'A'               null,
+    price_serv       float     default 0                 null
+);
+
+create table tbl_task
+(
+    id_task     int auto_increment
+        primary key,
+    id_service  int              null,
+    name_task   varchar(250)     not null,
+    status_task char default 'A' null
+);
+
+create index tbl_task_tbl_services_id_serv_fk
+    on tbl_task (id_service);
+
+create table tbl_token
+(
+    token_id   int auto_increment
+        primary key,
+    usu_id     int                        null,
+    token      varchar(255)               null,
+    created_at timestamp  default (now()) null,
+    expires_at timestamp                  null,
+    is_revoked tinyint(1) default 0       null
+);
+
+create index tbl_token_tbl_user_us_id_fk
+    on tbl_token (usu_id);
+
+create table tbl_used_products
+(
+    id_up     int auto_increment
+        primary key,
+    pro_id    int null,
+    up_amount int null,
+    wo_id     int null
+);
+
+create index tbl_used_products_tbl_product_pro_id_fk
+    on tbl_used_products (pro_id);
+
+create index tbl_used_products_tbl_work_order_wo_id_fk
+    on tbl_used_products (wo_id);
+
+create table tbl_user
+(
+    us_id            int auto_increment
+        primary key,
+    us_name          varchar(255)              null,
+    us_lastName      varchar(255)              null,
+    us_image         varchar(255)              null,
+    us_address       varchar(255)              null,
+    us_dni           varchar(10)               null,
+    us_first_phone   varchar(10)               null,
+    us_second_phone  varchar(10)               null,
+    created_at       timestamp default (now()) null,
+    us_email         varchar(255)              null,
+    us_password      varchar(255)              null,
+    us_status        char      default 'N'     null,
+    updated_at       timestamp                 null,
+    email_verfied_at timestamp                 null,
+    google_id        varchar(255)              null
+);
+
+create table tbl_work_order
+(
+    wo_id          int auto_increment
+        primary key,
+    wo_start_date  datetime                                                           null,
+    wo_final_date  datetime                                                           null,
+    wo_status      enum ('pendiente', 'en_proceso', 'finalizado') default 'pendiente' null,
+    wo_description varchar(255)                                                       null,
+    wo_total       decimal(10, 2)                                                     null,
+    us_id          int                                                                null,
+    wo_order_code  varchar(10)                                                        null,
+    cli_id         int                                                                null,
+    pdf_report     blob                                                               null,
+    constraint tbl_work_order_wo_order_code_uindex
+        unique (wo_order_code)
+);
+
+create index tbl_product_order_tbl_user_us_id_fk
+    on tbl_work_order (us_id);
+
+create index tbl_work_order_tbl_user_us_id_fk
+    on tbl_work_order (cli_id);
+
+create table tbl_work_order_service
+(
+    wo_service_id int auto_increment
+        primary key,
+    wo_id         int null,
+    service_id    int null
+);
+
+create index tbl_work_order_service_tbl_service_id_serv_fk
+    on tbl_work_order_service (service_id);
+
+create index tbl_work_order_service_tbl_work_order_wo_id_fk
+    on tbl_work_order_service (wo_id);
+
+create table tbl_work_order_task
+(
+    wo_task_id  int auto_increment
+        primary key,
+    wo_id       int                                                  null,
+    task_id     int                                                  null,
+    task_status enum ('pendiente', 'completada') default 'pendiente' null
+);
+
+create index tbl_work_order_task_tbl_task_id_task_fk
+    on tbl_work_order_task (task_id);
+
+create index tbl_work_order_task_tbl_work_order_wo_id_fk
+    on tbl_work_order_task (wo_id);
+
+INSERT INTO tbl_permission (perm_name) VALUES
+('profile.update'),
+('profile.destroy'),
+('profile.store'),
+('view.index.profile'),
+('view.index.category'),
+('view.index.product'),
+('view.index.service'),
+('view.index.employee'),
+('view.index.role'),
+('role.update'),
+('role.destroy'),
+('role.store'),
+('product.update'),
+('product.destroy'),
+('product.store'),
+('category.update'),
+('category.destroy'),
+('category.store'),
+('service.update'),
+('service.destroy'),
+('service.store'),
+('employee.update'),
+('employee.destroy'),
+('employee.store');
+
+
+INSERT INTO tbl_role_permission (role_id, perm_id) VALUES
+(1, 1),  -- Asume que el perm_id 1 es 'profile.update'
+(1, 2),  -- Asume que el perm_id 2 es 'profile.destroy'
+(1, 3),  -- Asume que el perm_id 3 es 'profile.store'
+(1, 4),  -- Asume que el perm_id 4 es 'view.index.profile'
+(1, 5),  -- Asume que el perm_id 5 es 'view.index.category'
+(1, 6),  -- Asume que el perm_id 6 es 'view.index.product'
+(1, 7),  -- Asume que el perm_id 7 es 'view.index.service'
+(1, 8),  -- Asume que el perm_id 8 es 'view.index.employee'
+(1, 9),  -- Asume que el perm_id 9 es 'view.index.role'
+(1, 10), -- Asume que el perm_id 10 es 'role.update'
+(1, 11), -- Asume que el perm_id 11 es 'role.destroy'
+(1, 12), -- Asume que el perm_id 12 es 'role.store'
+(1, 13), -- Asume que el perm_id 13 es 'product.update'
+(1, 14), -- Asume que el perm_id 14 es 'product.destroy'
+(1, 15), -- Asume que el perm_id 15 es 'product.store'
+(1, 16), -- Asume que el perm_id 16 es 'category.update'
+(1, 17), -- Asume que el perm_id 17 es 'category.destroy'
+(1, 18), -- Asume que el perm_id 18 es 'category.store'
+(1, 19), -- Asume que el perm_id 19 es 'service.update'
+(1, 20), -- Asume que el perm_id 20 es 'service.destroy'
+(1, 21), -- Asume que el perm_id 21 es 'service.store'
+(1, 22), -- Asume que el perm_id 22 es 'employee.update'
+(1, 23), -- Asume que el perm_id 23 es 'employee.destroy'
+(1, 24); -- Asume que el perm_id 24 es 'employee.store'

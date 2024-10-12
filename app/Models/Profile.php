@@ -33,5 +33,11 @@ class Profile extends Model
     {
         return !is_null($this->email_verified_at);
     }
+    public function showModal()
+    {
+        $users = Profile::select('us_id as id', 'us_name as name', 'us_image as picture')->get();
+
+        return view('categories.index', compact('users'));
+    }
 
 }

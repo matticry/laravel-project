@@ -98,7 +98,8 @@
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->pro_code }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">
                                 @if($product->pro_image)
-                                    <img src="{{ asset('storage/' . $product->pro_image) }}" alt="{{ $product->pro_name }}" class="h-12 w-12 object-cover rounded-full">                                @else
+                                    <img src="{{ asset('storage/' . $product->pro_image) }}" alt="{{ $product->pro_name }}" class="h-12 w-12 object-cover rounded-full">
+                                @else
                                     <div class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
                                         <span class="text-gray-500 text-xs">Sin imagen</span>
                                     </div>

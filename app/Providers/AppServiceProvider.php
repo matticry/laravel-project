@@ -12,12 +12,14 @@ use App\Services\Interfaces\RoleServiceInterface;
 use App\Services\Interfaces\ServiceServiceInterface;
 use App\Services\Interfaces\TaskServiceInterface;
 use App\Services\Interfaces\UserServiceInterface;
+use App\Services\Interfaces\WorkOrderRepositoryInterface;
 use App\Services\ProductService;
 use App\Services\ProfileService;
 use App\Services\RoleService;
 use App\Services\ServiceService;
 use App\Services\TaskService;
 use App\Services\UserService;
+use App\Services\WorkOrderService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -37,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProfileServiceInterface::class, ProfileService::class);
         $this->app->bind(RoleServiceInterface::class, RoleService::class);
         $this->app->bind(CategoryServiceInterface::class, CategoryService::class);
+        $this->app->bind(WorkOrderRepositoryInterface::class, WorkOrderService::class);
 
 
 

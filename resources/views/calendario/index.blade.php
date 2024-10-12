@@ -6,45 +6,416 @@
 
 @section('content')
     <div x-data="{
-        activeTab: 'categories',
+        activeTab: 'calendario',
         isModalOpen: false,
-    }" class="mb-6">
+        }" class="mb-6">
         <div class="border-b border-blue-200">
             <nav class="-mb-px flex">
-                <a href="{{ route('products.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
+                <a @click.prevent="activeTab = 'calendario'" :class="{'border-blue-500 text-blue-800': activeTab === 'calendario'}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
                     Calendario
                 </a>
-                <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
+                <a href="{{ route('calendario.ordenes') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
                     Ordenes de Trabajo
                 </a>
-                <a @click.prevent="activeTab = 'categories'" :class="{'border-blue-500 text-blue-800': activeTab === 'categories'}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
-                    Reporte de Técnicos
+                <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
+                    Reportes de Técnicos
                 </a>
             </nav>
         </div>
-        <div class="container mx-auto px-4 py-8">
-            <div class="flex justify-end mb-4">
-                <x-bladewind::button
-                    show_close_icon="true"
-                    onclick="showModal('crear-orden-trabajo')">
-                    CREAR ORDEN DE TRABAJO
-                </x-bladewind::button>
+        @if (session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">¡Éxito!</strong>
+                <span class="block sm:inline">{{ session('success') }}</span>
             </div>
-            <x-bladewind::modal
-                name="crear-orden-trabajo"
-                title="Crear Nueva Orden de Trabajo">
-                <p class="text-sm text-gray-500">
-                    Aquí puedes agregar el formulario para crear una nueva orden de trabajo.
-                </p>
-                <!-- Aquí puedes agregar el formulario para crear una nueva orden de trabajo -->
-                <div class="mt-4 flex justify-end">
-                    <x-bladewind::button
-                        color="blue"
-                        onclick="saveOrdenTrabajo()">
-                        Guardar
-                    </x-bladewind::button>
+        @endif
+
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <strong class="font-bold">¡Oops!</strong>
+                <span class="block sm:inline">{{ $errors->first() }}</span>
+            </div>
+        @endif
+
+        <div class="flex justify-end mt-4">
+            <button onclick="showModal('my-modal')" class="bg-blue-300 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Crear orden de trabajo
+            </button>
+        </div>
+        <x-bladewind::modal
+            name="my-modal"
+            title="Orden de trabajo"
+            ok_button_label=""
+            cancel_button_label="Cancelar"
+            size="xl"
+            class="max-h-[90vh]">
+            @if ($errors->any())
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <strong class="font-bold">¡Oops!</strong>
+                    <span class="block sm:inline">{{ $errors->first() }}</span>
                 </div>
-            </x-bladewind::modal>
+            @endif
+
+            <form id="service-form" method="POST" enctype="multipart/form-data" action="{{ route('calendario.store') }}">
+                @csrf
+                @method('POST')
+                <div class="overflow-y-auto max-h-[calc(90vh-100px)]">
+                    @can('button.signature')
+                        <div class="mt-6 mb-4">
+                            <h3 class="text-lg font-semibold mb-2">La orden irá firmada por:</h3>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600" name="firma_cliente">
+                                    <span class="ml-2 text-gray-700">Firma del tecnico</span>
+                                </label>
+
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600" name="firma_empleado">
+                                    <span class="ml-2 text-gray-700">Firma del administrador</span>
+                                </label>
+                            </div>
+                        </div>
+                    @endcan
+
+                    <!-- Sección de botones -->
+                    <div class="absolute top-4 right-8 flex space-x-2">
+                        <button class="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ease-in-out" title="Refrescar">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                        </button>
+                        @can('button.add.client')
+                            <button  class="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ease-in-out" title="Insertar Cliente">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
+                                </svg>
+                            </button>
+                        @endcan
+                        @can('button.add.service')
+                            <button class="p-2 rounded-full bg-green-500 hover:bg-green-600 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 ease-in-out" title="Crear Servicio">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 012 0v6a1 1 0 11-2 0V9z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        @endcan
+                        <button class="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ease-in-out" title="Buscar Cliente">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="mt-4 mb-4 p-2 bg-yellow-100 rounded-md">
+                        <p class="text-sm text-yellow-700">Nota: Esta orden tendrá una vigencia de 72 horas después de ser creada.</p>
+                    </div>
+                    <!-- Contenedor flex para los dropdowns -->
+                    <div class="flex space-x-4">
+                        <!-- Primer Dropdown -->
+                        <div class="relative group flex-1">
+                            <button id="dropdown-button-1" type="button" class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500">
+                                <span class="mr-2">Empleados</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div id="dropdown-menu-1" class="hidden absolute left-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 z-50">
+                                <input id="search-input-1" class="block w-full px-4 py-2 text-gray-800 border rounded-md border-gray-300 focus:outline-none" type="text" placeholder="Buscar empleados" autocomplete="off">
+                                <div class="dropdown-scroll mt-1 max-h-40 overflow-y-auto">
+                                    @foreach($employees as $employee)
+                                        <option class="block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md" value="{{ $employee->us_id }}">{{ $employee->us_name }}</option>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="us_id" id="selected-employee-id">
+                        <input type="hidden" name="cli_id" id="selected-client-id">
+
+                        <!-- Segundo Dropdown -->
+                        <div class="relative group flex-1">
+                            <button id="dropdown-button-2" type="button" class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500">
+                                <span class="mr-2">Clientes</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-2 -mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M6.293 9.293a1 1 0 011.414 0L10 11.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div id="dropdown-menu-2" class="hidden absolute left-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 p-1 z-50">
+                                <input id="search-input-2" class="block w-full px-4 py-2 text-gray-800 border rounded-md border-gray-300 focus:outline-none" type="text" placeholder="Buscar empleados" autocomplete="off">
+                                <div class="dropdown-scroll mt-1 max-h-40 overflow-y-auto">
+                                    @foreach($clients as $client)
+                                        <option class="block px-4 py-2 text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer rounded-md" value="{{ $client->us_id }}">{{ $client->us_name }}</option>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4 mb-4 mt-5">
+                        <div class="flex-1">
+                            <div class="relative">
+                                <label for="start_datetime" class="block text-sm font-medium text-gray-700">Fecha y hora de inicio</label>
+                                <input type="text" id="start_datetime" name="wo_start_date" placeholder="dd/mm/yyyy hh:mm"
+                                       class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-calendar text-gray-400 mt-5"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-1">
+                            <div class="relative">
+                                <label for="end_datetime" class="block text-sm font-medium text-gray-700">Fecha y hora de fin</label>
+                                <input type="text" id="end_datetime" name="wo_final_date" placeholder="dd/mm/yyyy hh:mm"
+                                       class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-calendar text-gray-400 mt-5"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <!-- Descripción -->
+                        <div class="mb-6">
+                            <label for="description" class="block mb-2 text-sm font-medium text-gray-700">Descripción</label>
+                            <textarea
+                                id="description"
+                                name="wo_description"
+                                rows="4"
+                                placeholder="Ingrese una descripción detallada aquí..."
+                                class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 resize-none transition duration-200 ease-in-out"
+                                required
+                            ></textarea>
+                        </div>
+
+                    <!-- Tabla de Productos -->
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <input type="text" id="product-filter" class="w-64 px-3 py-2 border rounded-md" placeholder="Filtrar por código de producto">
+                            <x-bladewind::button
+                                size="tiny"
+                                onclick="showModal('product-selection-modal')">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                Agregar Productos
+                            </x-bladewind::button>
+                        </div>
+                        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                            <table id="product-table" class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seleccionar</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre del Producto</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($products as $product)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded" name="selected_products[]" value="{{ $product->pro_id }}">
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $product->pro_code }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <img src="{{ asset('storage/' . $product->pro_image) }}" alt="{{ $product->pro_name }}" class="w-16 h-16 object-cover rounded-md">
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $product->pro_name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-500">{{ $product->pro_amount }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <input type="number"
+                                                   name="product_quantity[{{ $product->pro_id }}]"
+                                                   class="mt-1 block w-20 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                                   value="1"
+                                                   min="1"
+                                                   max="{{ $product->pro_amount }}">
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de Servicios -->
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <input type="text" id="service-filter" class="w-64 px-3 py-2 border rounded-md" placeholder="Filtrar por nombre de servicio">
+                            <x-bladewind::button
+                                size="tiny"
+                                onclick="showModal('service-selection-modal')"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                Agregar Servicios
+                            </x-bladewind::button>
+                        </div>
+                        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                            <table id="service-table" class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seleccionar</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre del Servicio</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tareas</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio (USD)</th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($services as $service)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <input type="checkbox"
+                                                   class="form-checkbox h-5 w-5 text-blue-600"
+                                                   name="selected_services[]"
+                                                   value="{{ $service->id_serv }}"
+                                                   data-tasks="{{ $service->tasks->pluck('id_task')->implode(',') }}">
+                                        </td>
+                                        <input type="hidden" name="service_tasks[{{ $service->id_serv }}]" value="{{ $service->tasks->pluck('id_task')->implode(',') }}">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $service->name_serv }}</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex flex-wrap gap-2">
+                                                @foreach($service->tasks as $task)
+                                                    <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">{{ $task->name_task }}</span>
+                                                @endforeach
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <input type="number" name="service_price[{{ $service->id_serv }}]" placeholder="Ingresa un monto" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" value="{{ $service->price_serv }}" min="0" step="0.01">
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Modal para seleccionar productos -->
+                    <x-bladewind::modal
+                        name="product-selection-modal"
+                        title="Seleccionar Productos"
+                        ok_button_label="Agregar Seleccionados"
+                        ok_button_action="addSelectedProductsToMainTable()"
+                        close_after_action="false"
+                        size="xl">
+
+                        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                            <div class="flex justify-between items-center mb-2">
+                                <input type="text" id="modal-product-filter" class="w-64 px-3 py-2 border rounded-md" placeholder="Filtrar por código de producto">
+                            </div>
+                            <table id="modal-product-table" class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seleccionar</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre del Producto</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($allProducts as $product)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded" name="selected_products[]" value="{{ $product->pro_id }}">
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $product->pro_code }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <img src="{{ asset('storage/' . $product->pro_image) }}" alt="{{ $product->pro_name }}" class="w-16 h-16 object-cover rounded-md">
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $product->pro_name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-500">{{ $product->pro_amount }}</div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </x-bladewind::modal>
+
+                    <!-- Modal para seleccionar servicios -->
+                    <x-bladewind::modal
+                        name="service-selection-modal"
+                        title="Seleccionar Servicios"
+                        ok_button_label="Agregar Seleccionados"
+                        ok_button_action="addSelectedServices()"
+                        close_after_action="false"
+                        size="xl">
+                        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                        <div class="flex justify-between items-center mb-2">
+                            <input type="text" id="modal-service-filter" class="w-64 px-3 py-2 border rounded-md" placeholder="Filtrar por nombre de servicio">
+                        </div>
+                            <table id="modal-service-table" class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seleccionar</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre del Servicio</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tareas</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio (USD)</th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($allServices as $service)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600" name="selected_products[]" value="{{ $service->id_serv }}">
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $service->name_serv }}</div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="flex flex-wrap gap-2">
+                                                @foreach($service->tasks as $task)
+                                                    <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">{{ $task->name_task }}</span>
+                                                @endforeach
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $service->price_serv }}</div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </x-bladewind::modal>
+                        <div class="mt-4">
+                            <p id="total-display" class="text-right font-bold text-2xl text-gray-800 bg-gray-100 px-4 py-2 rounded-md shadow-sm">Total: $ 0.00</p>
+                        </div>
+                        <input type="hidden" name="wo_total" id="wo_total" value="0">
+                    @can('button.upload.signature')
+                        <div class="mt-4">
+                            <button class="upload-signature-btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                Subir Firma
+                            </button>
+                        </div>
+                    @endcan
+                </div>
+                <div class="mt-4 flex justify-end">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Generar Orden de Trabajo
+                    </button>
+                </div>
+            </form>
+        </x-bladewind::modal>
+
+        <div class="container mx-auto px-4 py-8">
             <div class="flex justify-between mb-6 text-sm">
                 <div class="flex items-center bg-blue-100 rounded-lg px-4 py-2">
                     <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -74,23 +445,82 @@
             <div id="calendar" class="bg-blue-100 rounded-lg shadow-lg overflow-hidden"></div>
         </div>
     </div>
+    <style>
+        .upload-signature-btn {
+            transition: all 0.3s ease;
+        }
+        .upload-signature-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input:checked ~ .dot {
+            transform: translateX(100%);
+            background-color: #48bb78;
+        }
+        input:checked ~ .block {
+            background-color: #48bb78;
+        }
+        .tempus-dominus-widget {
+            z-index: 9999 !important;
+        }
+        .fc-timegrid-now-indicator-container {
+            width: 80px !important;
+        }
+        .fc-header-toolbar {
+            padding: 10px 0;
+        }
 
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js'></script>
+        .fc-button-active {
+            background-color: #ffffff !important;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .fc-prev-button, .fc-next-button, .fc-today-button {
+            font-weight: bold;
+        }
+    </style>
+    <script src="{{ asset('assets/js/datetimepicker.js') }}"defer></script>
+    <script src="{{ asset('assets/js/filter_products_services.js') }}"defer></script>
+    <script src="{{ asset('assets/js/config_dropdown.js') }}"defer></script>
+    <script src="{{ asset('assets/js/filter-modal-products.js') }}"defer></script>
+    <script src="{{ asset('assets/js/filter-modal-services.js') }}"defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceTable = document.getElementById('service-table');
+            const checkboxes = serviceTable.querySelectorAll('input[type="checkbox"][name="selected_services[]"]');
+            const priceInputs = serviceTable.querySelectorAll('input[name^="service_price"]');
+            const totalDisplay = document.getElementById('total-display');
+            const woTotalInput = document.getElementById('wo_total');
+
+            function updateTotal() {
+                let total = 0;
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        const row = checkbox.closest('tr');
+                        const priceInput = row.querySelector('input[name^="service_price"]');
+                        const price = parseFloat(priceInput.value) || 0;
+                        total += price;
+                    }
+                });
+                totalDisplay.textContent = `Total: $ ${total.toFixed(2)}`;
+                woTotalInput.value = total.toFixed(2);
+            }
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateTotal);
+            });
+
+            priceInputs.forEach(input => {
+                input.addEventListener('input', updateTotal);
+            });
+        });
+    </script>
 
     <script>
-        function saveOrdenTrabajo() {
-            // Aquí puedes agregar la lógica para guardar la orden de trabajo
-            // Por ejemplo, enviar una solicitud AJAX al servidor
-            // Luego, cerrar el modal
-            hideModal('crear-orden-trabajo');
-        }
-    </script>
 
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
-
                 allDaySlot: false,
                 slotMinTime: '06:00:00',
                 height: 'auto',
@@ -107,32 +537,28 @@
                     prev: '<',
                     next: '>'
                 },
-                events: [
-                    {
-                        title: 'Meet with Anne',
-                        start: '2024-10-09T09:00:00',
-                        end: '2024-10-09T09:30:00',
-                        backgroundColor: '#E6E6FA',
-                        borderColor: '#D8BFD8',
-                        textColor: '#000000'
-                    },
-                    {
-                        title: 'Daily Sync',
-                        start: '2024-10-09T11:00:00',
-                        end: '2024-10-09T11:30:00',
-                        backgroundColor: '#E0FFFF',
-                        borderColor: '#B0E0E6',
-                        textColor: '#000000'
-                    },
-                    {
-                        title: 'Discuss Animal Project',
-                        start: '2024-10-09T12:00:00',
-                        end: '2024-10-09T12:30:00',
-                        backgroundColor: '#E0FFFF',
-                        borderColor: '#B0E0E6',
-                        textColor: '#000000'
+                events: '{{ route('get.events') }}',
+                eventDidMount: function(info) {
+                    // Asignar color basado en el estado de la orden
+                    switch(info.event.extendedProps.workOrderStatus) {
+                        case 'pendiente':
+                            info.el.style.backgroundColor = '#D8BFD8';
+                            info.el.style.borderColor = '#D8BFD8';
+                            break;
+                        case 'en_proceso':
+                            info.el.style.backgroundColor = '#f6e093';
+                            info.el.style.borderColor = '#f6e093';
+                            break;
+                        case 'finalizado':
+                            info.el.style.backgroundColor = '#9ff693';
+                            info.el.style.borderColor = '#9ff693';
+                            break;
+                        default:
+                            info.el.style.backgroundColor = '#E6E6FA';
+                            info.el.style.borderColor = '#D8BFD8';
                     }
-                ],
+                    info.el.style.color = '#000000';
+                },
                 eventColor: '#E6E6FA',
                 eventTextColor: '#000000',
                 eventBorderColor: '#D8BFD8',
@@ -231,19 +657,6 @@
     </script>
 
     <style>
-        .fc-timegrid-now-indicator-container {
-            width: 80px !important;
-        }
-        .fc-header-toolbar {
-            padding: 10px 0;
-        }
 
-        .fc-button-active {
-            background-color: #ffffff !important;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-        }
-        .fc-prev-button, .fc-next-button, .fc-today-button {
-            font-weight: bold;
-        }
     </style>
 @endsection

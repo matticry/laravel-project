@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('profile', ProfileController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('calendario', CalendarioController::class);
+    Route::get('/workOrder', [CalendarioController::class, 'workOrder'])->name('calendario.ordenes');
 });
 
 Route::get('/', function () {
@@ -56,8 +57,12 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.su
 // Ruta para obtener datos por cédula
 Route::get('/cedula/{cedula}', [CedulaController::class, 'obtenerDatos']);
 Route::get('/user/{id}', [CedulaController::class, 'getInfoUserById']);
+Route::get('/events', [CedulaController::class, 'getEvents'])->name('get.events');
 
 
+
+
+Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
 // Ruta para tener el permiso de actualizar el perfil
 Route::put('/{id}/update', [ProfileController::class, 'update'])->middleware('permission:profile.update')->name('profile.update');
 Route::delete('/{id}/destroy', [ProfileController::class, 'destroy'])->middleware('permission:profile.destroy')->name('profile.destroy');

@@ -55,4 +55,5 @@ class Product extends Model
         return 'P' . str_pad($newNumericPart, 4, '0', STR_PAD_LEFT);
     }
 
+
 }
