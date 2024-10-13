@@ -12,9 +12,9 @@ class WorkOrderTask extends Model
     protected $primaryKey = 'wo_task_id';
     protected $fillable = ['wo_id', 'task_id', 'task_status'];
 
-    public function workOrder()
+    public function workOrderService()
     {
-        return $this->belongsTo(WorkOrder::class, 'wo_id');
+        return $this->belongsTo(WorkOrderService::class, 'wo_id', 'wo_id');
     }
 
 

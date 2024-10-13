@@ -36,6 +36,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('calendario', CalendarioController::class);
     Route::get('/workOrder', [CalendarioController::class, 'workOrder'])->name('calendario.ordenes');
+    Route::patch('/workorders/{workorder}/authorize', [CalendarioController::class, 'authorizeWorkOrder'])->name('workorders.authorize');
+    Route::put('/workOrder/{workOrderId}', [CalendarioController::class, 'update'])->name('calendario.update');
+
 });
 
 Route::get('/', function () {
@@ -58,11 +61,28 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.su
 Route::get('/cedula/{cedula}', [CedulaController::class, 'obtenerDatos']);
 Route::get('/user/{id}', [CedulaController::class, 'getInfoUserById']);
 Route::get('/events', [CedulaController::class, 'getEvents'])->name('get.events');
+Route::get('/getWorkOrderById/{id}', [CedulaController::class, 'JsonWorkOrder'])->name('get.workOrder');
 
 
 
 
-Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Ruta para tener el permiso de actualizar el perfil
 Route::put('/{id}/update', [ProfileController::class, 'update'])->middleware('permission:profile.update')->name('profile.update');
 Route::delete('/{id}/destroy', [ProfileController::class, 'destroy'])->middleware('permission:profile.destroy')->name('profile.destroy');
@@ -92,6 +112,13 @@ Route::put('/{id}/update', [ServiceController::class, 'update'])->middleware('pe
 Route::delete('/{id}/destroy', [ServiceController::class, 'destroy'])->middleware('permission:service.destroy')->name('service.destroy');
 Route::post('/store', [ServiceController::class, 'store'])->middleware('permission:service.store')->name('service.store');
 Route::get('/service', [ServiceController::class, 'index'])->middleware('permission:view.index.service')->name('service.index');
+
+//Ruta para tener permisos de calendario
+Route::delete('/{id}/destroy', [CalendarioController::class, 'destroy'])->middleware('permission:calendario.destroy')->name('calendario.destroy');
+Route::post('/store', [CalendarioController::class, 'store'])->middleware('permission:calendario.store')->name('calendario.store');
+Route::get('/workOrder', [CalendarioController::class, 'workOrder'])->middleware('permission:view.index.ordenes')->name('calendario.ordenes');
+Route::put('/workOrder/{workOrderId}', [CalendarioController::class, 'update'])->middleware('permission:calendario.update')->name('calendario.update');
+Route::get('/calendario', [CalendarioController::class, 'index'])->middleware('permission:view.index.calendar')->name('calendario.index');
 
 // Ruta de dashboard protegida (requiere autenticación)
 Route::get('/dashboard', function () {

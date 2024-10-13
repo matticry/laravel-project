@@ -14,35 +14,55 @@
                 <a @click.prevent="activeTab = 'calendario'" :class="{'border-blue-500 text-blue-800': activeTab === 'calendario'}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
                     Calendario
                 </a>
-                <a href="{{ route('calendario.ordenes') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
-                    Ordenes de Trabajo
-                </a>
-                <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
-                    Reportes de Técnicos
-                </a>
+                @can('view.index.ordenes')
+                    <a href="{{ route('calendario.ordenes') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
+                        Ordenes de Trabajo
+                    </a>
+                @endcan
+                @can('view.index.reports')
+                    <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
+                        Reportes de Técnicos
+                    </a>
+                @endcan
             </nav>
         </div>
         @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <strong class="font-bold">¡Éxito!</strong>
-                <span class="block sm:inline">{{ session('success') }}</span>
+            <div x-data="{ show: true }" x-show="show" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md relative mb-4" role="alert">
+                <button class="absolute top-2 right-2 text-green-700 hover:bg-green-200 p-1 rounded transition duration-300">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div class="flex items-center">
+                    <svg class="h-5 w-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <strong class="font-bold">¡Éxito!</strong>
+                </div>
+                <span class="block mt-2">{{ session('success') }}</span>
+                <div class="mt-3">
+                    <a href="{{ route('calendario.ordenes') }}" class="text-green-700 hover:bg-green-200 px-2 py-1 rounded transition duration-300 mr-3">Ver detalles</a>
+                    <button @click="show = false" class="text-green-700 hover:bg-green-200 px-2 py-1 rounded transition duration-300">Cerrar</button>
+                </div>
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <x-bladewind::alert type="error">
                 <strong class="font-bold">¡Oops!</strong>
                 <span class="block sm:inline">{{ $errors->first() }}</span>
-            </div>
+            </x-bladewind::alert>
         @endif
 
         <div class="flex justify-end mt-4">
-            <button onclick="showModal('my-modal')" class="bg-blue-300 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                Crear orden de trabajo
-            </button>
+            @can('button.create.ordenes')
+                <button onclick="showModal('my-modal')" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Crear orden de trabajo
+                </button>
+            @endcan
         </div>
         <x-bladewind::modal
             name="my-modal"
@@ -51,13 +71,6 @@
             cancel_button_label="Cancelar"
             size="xl"
             class="max-h-[90vh]">
-            @if ($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <strong class="font-bold">¡Oops!</strong>
-                    <span class="block sm:inline">{{ $errors->first() }}</span>
-                </div>
-            @endif
-
             <form id="service-form" method="POST" enctype="multipart/form-data" action="{{ route('calendario.store') }}">
                 @csrf
                 @method('POST')
@@ -106,8 +119,11 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="mt-4 mb-4 p-2 bg-yellow-100 rounded-md">
-                        <p class="text-sm text-yellow-700">Nota: Esta orden tendrá una vigencia de 72 horas después de ser creada.</p>
+                    <div class="mt-4 mb-4 p-2">
+                        <x-bladewind::alert
+                            type="warning">
+                            Nota: Esta orden tendrá una vigencia de 72 horas después de ser creada.
+                        </x-bladewind::alert>
                     </div>
                     <!-- Contenedor flex para los dropdowns -->
                     <div class="flex space-x-4">
@@ -421,25 +437,25 @@
                     <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
-                    <span class="font-semibold text-gray-700">Ordenes de trabajo: 1247</span>
+                    <span class="font-semibold text-gray-700">Total de Ordenes: {{$total}}  </span>
                 </div>
                 <div class="flex items-center bg-purple-100 rounded-lg px-4 py-2">
                     <svg class="w-5 h-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <span class="font-semibold text-gray-700">Ordenes pendientes: 123</span>
-                </div>
-                <div class="flex items-center bg-green-50 rounded-lg px-4 py-2">
-                    <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span class="font-semibold text-gray-700">Active Posts: 4</span>
+                    <span class="font-semibold text-gray-700">Ordenes Pendientes: {{$countPending}}</span>
                 </div>
                 <div class="flex items-center bg-yellow-50 rounded-lg px-4 py-2">
                     <svg class="w-5 h-5 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
-                    <span class="font-semibold text-gray-700">Scheduled Posts: 2</span>
+                    <span class="font-semibold text-gray-700">Ordenes en Autorizadas: {{$countAssigned}} </span>
+                </div>
+                <div class="flex items-center bg-green-50 rounded-lg px-4 py-2">
+                    <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="font-semibold text-gray-700">Ordenes Finalizadas: {{$countCompleted}}</span>
                 </div>
             </div>
             <div id="calendar" class="bg-blue-100 rounded-lg shadow-lg overflow-hidden"></div>
@@ -483,37 +499,8 @@
     <script src="{{ asset('assets/js/config_dropdown.js') }}"defer></script>
     <script src="{{ asset('assets/js/filter-modal-products.js') }}"defer></script>
     <script src="{{ asset('assets/js/filter-modal-services.js') }}"defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const serviceTable = document.getElementById('service-table');
-            const checkboxes = serviceTable.querySelectorAll('input[type="checkbox"][name="selected_services[]"]');
-            const priceInputs = serviceTable.querySelectorAll('input[name^="service_price"]');
-            const totalDisplay = document.getElementById('total-display');
-            const woTotalInput = document.getElementById('wo_total');
+    <script src="{{ asset('assets/js/total-input.js') }}"defer></script>
 
-            function updateTotal() {
-                let total = 0;
-                checkboxes.forEach(checkbox => {
-                    if (checkbox.checked) {
-                        const row = checkbox.closest('tr');
-                        const priceInput = row.querySelector('input[name^="service_price"]');
-                        const price = parseFloat(priceInput.value) || 0;
-                        total += price;
-                    }
-                });
-                totalDisplay.textContent = `Total: $ ${total.toFixed(2)}`;
-                woTotalInput.value = total.toFixed(2);
-            }
-
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateTotal);
-            });
-
-            priceInputs.forEach(input => {
-                input.addEventListener('input', updateTotal);
-            });
-        });
-    </script>
 
     <script>
 

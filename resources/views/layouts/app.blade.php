@@ -48,10 +48,12 @@
                     PRODUCTOS
                 </a>
             @endcan
+            @can('view.index.calendar')
             <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('calendario.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('calendario.index') }}">
                 <i class="fas fa-calendar mr-3"></i>
                 CALENDARIO
             </a>
+            @endcan
             <form action="{{ route('logout') }}" method="POST" class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900">
                 @csrf
                 <button type="submit">

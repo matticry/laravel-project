@@ -106,6 +106,27 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('employee.store', function ($user) {
             return $user->hasPermission('employee.store');
         });
+        //Permisos para calendario y ordenes de trabajo
+        Gate::define('calendario.store', function ($user) {
+            return $user->hasPermission('calendario.store');
+        });
+        Gate::define('calendario.update', function ($user) {
+            return $user->hasPermission('calendario.update');
+        });
+        Gate::define('calendario.destroy', function ($user) {
+            return $user->hasPermission('calendario.destroy');
+        });
+        Gate::define('view.index.calendar', function ($user) {
+            return $user->hasPermission('view.index.calendar');
+        });
+        Gate::define('view.index.reports', function ($user) {
+            return $user->hasPermission('view.index.reports');
+        });
+        Gate::define('view.index.ordenes', function ($user) {
+            return $user->hasPermission('view.index.ordenes');
+        });
+
+        //Permisos para botones
         Gate::define('button.add.client', function ($user) {
             return $user->hasPermission('button.add.client');
         });
@@ -118,6 +139,28 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('button.signature', function ($user) {
             return $user->hasPermission('button.signature');
         });
+        Gate::define('workorders.edit', function ($user) {
+            return $user->hasPermission('workorders.edit');
+        });
+        Gate::define('workorders.destroy', function ($user) {
+            return $user->hasPermission('workorders.destroy');
+        });
+        Gate::define('button.role.add', function ($user) {
+            return $user->hasPermission('button.role.add');
+        });
+        Gate::define('button.role.edit', function ($user) {
+            return $user->hasPermission('button.role.edit');
+        });
+        Gate::define('button.role.destroy', function ($user) {
+            return $user->hasPermission('button.role.destroy');
+        });
+        Gate::define('button.create.ordenes', function ($user) {
+            return $user->hasPermission('button.create.ordenes');
+        });
+
+
+
+
 
 
     }

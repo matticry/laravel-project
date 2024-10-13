@@ -21,4 +21,8 @@ class WorkOrderService extends Model
     {
         return $this->belongsTo(Service::class, 'service_id', 'id_serv');
     }
+    public function tasks()
+    {
+        return $this->hasMany(WorkOrderTask::class, 'wo_id', 'wo_id');
+    }
 }

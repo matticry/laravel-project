@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\DetailWorkOrder;
 use App\Models\Product;
 use App\Models\Profile;
 use App\Models\Role;
@@ -10,6 +11,45 @@ use App\Services\Interfaces\WorkOrderRepositoryInterface;
 
 class WorkOrderService implements WorkOrderRepositoryInterface
 {
+    public function CountTotalOrders()
+    {
+        $count = WorkOrder::count();
+        if ($count < 0) {
+            return 0;
+        }
+        return $count;
+
+    }
+    public function CountPendingOrders(): int
+    {
+        $count = WorkOrder::where('wo_status', 'pendiente')->count();
+        if ($count < 0) {
+            return 0;
+        }
+        return $count;
+
+    }
+
+    public function CountAuthorizedOrders(): int
+    {
+        $count = WorkOrder::where('wo_status', 'en_proceso')->count();
+        if ($count < 0) {
+            return 0;
+        }
+        return $count;
+
+    }
+
+    public function CountFinishedOrders(): int
+    {
+        $count = WorkOrder::where('wo_status', 'finalizado')->count();
+        if ($count < 0) {
+            return 0;
+        }
+        return $count;
+
+    }
+
     public function getEmployees()
     {
         $RoleEmployee = Role::where('rol_name', 'Empleado')->first();
@@ -47,9 +87,25 @@ class WorkOrderService implements WorkOrderRepositoryInterface
 
     }
 
+    public function getWorkOrderById($id)
+    {
+        return WorkOrder::findOrFail($id);
+
+    }
+
     public function getAllWorkOrders()
     {
         return WorkOrder::with(['user', 'client', 'services.service'])->get();
+    }
+
+    public function authorizeWorkOrder(WorkOrder $workOrder)
+    {
+        $workOrder->wo_status = 'en_proceso';
+        if ($workOrder->save()) {
+            return redirect()->back()->with('success', 'Orden de trabajo autorizada correctamente.');
+        }
+        return redirect()->back()->with('error', 'No se pudo autorizar la orden de trabajo.');
+
     }
 
 
@@ -148,5 +204,31 @@ class WorkOrderService implements WorkOrderRepositoryInterface
         $product->pro_amount = $product->pro_amount - $quantity;
         $product->save();
 
+    }
+
+
+    public function findById($id)
+    {
+        return WorkOrder::findOrFail($id);
+    }
+
+    public function update(WorkOrder $workOrder, array $data)
+    {
+        $workOrder->update($data);
+        return $workOrder;
+    }
+
+    public function deleteProducts($workOrderId)
+    {
+        // Primero, obtén el wo_order_code de la orden de trabajo
+        $workOrder = WorkOrder::findOrFail($workOrderId);
+
+        // Luego, usa ese código para eliminar los detalles
+        DetailWorkOrder::where('wo_id', $workOrder->wo_order_code)->delete();
+    }
+
+    public function deleteServices($workOrderId)
+    {
+        \App\Models\WorkOrderService::where('wo_id', $workOrderId)->delete();
     }
 }

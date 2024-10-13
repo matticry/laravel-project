@@ -11,4 +11,6 @@ interface WorkOrderRepositoryInterface
 
     public function getAllWorkOrders();
 
+    public function getWorkOrderById($workOrderId);
+
 }

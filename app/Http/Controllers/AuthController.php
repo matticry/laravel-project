@@ -71,7 +71,7 @@ class AuthController extends Controller
 
             if ($googleUser) {
                 Auth::login($googleUser);
-                return redirect()->intended('categories');
+                return redirect()->intended('calendario');
             } else {
                 $newUser = User::create([
                     'us_name' => $user->name,
@@ -82,7 +82,7 @@ class AuthController extends Controller
                 ]);
 
                 Auth::login($newUser);
-                return redirect()->intended('categories');
+                return redirect()->intended('calendario');
             }
         } catch (Exception $e) {
             dd($e->getMessage());
@@ -149,7 +149,7 @@ class AuthController extends Controller
                 'session' => $request->session()->all()
             ]);
 
-            return redirect()->intended('categories');
+            return redirect()->intended('calendario');
         }
 
         RateLimiter::hit($key, 300); // 300 segundos = 5 minutos

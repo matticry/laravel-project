@@ -10,12 +10,22 @@ use Illuminate\Support\Facades\Log;
 
 class CedulaController extends Controller
 {
+
+    public function getWorkOrderById($workOrderId)
+    {
+        $workOrder = WorkOrder::with(['services.tasks', 'details.product', 'client', 'user'])
+            ->findOrFail($workOrderId);
+
+        return response()->json($workOrder);
+
+    }
+
     public function getEvents()
     {
         $events = WorkOrder::with('user')->get()->map(function ($workOrder) {
             return [
                 'id' => $workOrder->wo_id,
-                'title' => 'SUP: ' . $workOrder->user->us_name,
+                'title' => 'SUP: ' . $workOrder->user->us_name ?? 'Usuario no asignado',
                 'start' => $workOrder->wo_start_date->format('Y-m-d\TH:i:s'),
                 'end' => $workOrder->wo_final_date->format('Y-m-d\TH:i:s'),
                 'extendedProps' => [
@@ -29,7 +39,7 @@ class CedulaController extends Controller
     // Obtener información de una orden de trabajo
     public function JsonWorkOrder($idWorkOrder)
     {
-        $workOrder = WorkOrder::with(['services.tasks', 'details.product', 'client', 'employee'])
+        $workOrder = WorkOrder::with(['services.tasks', 'details', 'client', 'user'])
             ->findOrFail($idWorkOrder);
 
         return response()->json([
@@ -39,57 +49,39 @@ class CedulaController extends Controller
             'wo_final_date' => $workOrder->wo_final_date,
             'wo_status' => $workOrder->wo_status,
             'wo_description' => $workOrder->wo_description,
-            'pdf_report' => $workOrder->pdf_report,
             'wo_total' => $workOrder->wo_total,
-            'cliente' => [
-                'cli_id' => $workOrder->cli_id,
-                'us_name' => $workOrder->client->us_name,
-                'us_lastName' => $workOrder->client->us_lastName,
-                'us_email' => $workOrder->client->us_email,
-                'us_address' => $workOrder->client->us_address,
-                'us_dni' => $workOrder->client->us_dni,
-                'us_first_phone' => $workOrder->client->us_first_phone,
-                'us_second_phone' => $workOrder->client->us_second_phone,
-                'us_image' => $workOrder->client->us_image,
-                'us_status' => $workOrder->client->us_status,
+            'client' => [
+                'cli_id' => $workOrder->client->us_id,
+                'cli_name' => $workOrder->client->us_name,
+                // Añade más campos del cliente según sea necesario
             ],
-            'empleado' => [
-                'us_id' => $workOrder->employee->us_id,
-                'us_name' => $workOrder->employee->us_name,
-                'us_lastName' => $workOrder->employee->us_lastName,
-                'us_email' => $workOrder->employee->us_email,
-                'us_address' => $workOrder->employee->us_address,
-                'us_dni' => $workOrder->employee->us_dni,
-                'us_first_phone' => $workOrder->employee->us_first_phone,
-                'us_second_phone' => $workOrder->employee->us_second_phone,
-                'us_image' => $workOrder->employee->us_image,
-                'us_status' => $workOrder->employee->us_status,
-                'created_at' => $workOrder->employee->created_at,
-                'email_verified_at' => $workOrder->employee->email_verified_at,
+            'user' => [
+                'us_id' => $workOrder->user->us_id,
+                'us_name' => $workOrder->user->us_name,
+                // Añade más campos del usuario según sea necesario
             ],
-            'details' => $workOrder->details->map(function ($detail) {
-                return [
-                    'dwo_id' => $detail->dwo_id,
-                    'pro_id' => $detail->pro_id,
-                    'product_name' => $detail->product->pro_name,
-                    'dwo_amount' => $detail->dwo_amount,
-                    'product_price' => $detail->product->pro_price,
-                ];
-            }),
             'services' => $workOrder->services->map(function ($service) {
                 return [
                     'wo_service_id' => $service->wo_service_id,
                     'service_id' => $service->service_id,
-                    'service_name' => $service->service->name_serv,
                     'price_service' => $service->price_service,
                     'tasks' => $service->tasks->map(function ($task) {
                         return [
                             'wo_task_id' => $task->wo_task_id,
                             'task_id' => $task->task_id,
-                            'task_name' => $task->task->name_task,
                             'task_status' => $task->task_status,
+                            // Añade más campos de la tarea según sea necesario
                         ];
                     }),
+                    // Añade más campos del servicio según sea necesario
+                ];
+            }),
+            'products' => $workOrder->details->map(function ($detail) {
+                return [
+                    'dwo_id' => $detail->dwo_id,
+                    'pro_id' => $detail->pro_id,
+                    'dwo_amount' => $detail->dwo_amount,
+                    // Añade más campos del producto según sea necesario
                 ];
             }),
         ]);
