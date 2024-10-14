@@ -7,6 +7,7 @@ use App\Http\Controllers\CedulaController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
 use App\Services\ProfileService;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 
-
+Auth::routes();
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
@@ -38,7 +39,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/workOrder', [CalendarioController::class, 'workOrder'])->name('calendario.ordenes');
     Route::patch('/workorders/{workorder}/authorize', [CalendarioController::class, 'authorizeWorkOrder'])->name('workorders.authorize');
     Route::put('/workOrder/{workOrderId}', [CalendarioController::class, 'update'])->name('calendario.update');
-
+    Route::resource('reports', ReportController::class);
+    Route::patch('/generate-pdf/{id}', [ReportController::class, 'generatePdf'])->name('generate.pdf');
+    Route::get('/serve-pdf/{id}', [ReportController::class, 'servePdf'])->name('serve.pdf');
+    Route::patch('/reports/{id}/send-email', [ReportController::class, 'sendEmail'])->name('reports.send-email');
 });
 
 Route::get('/', function () {

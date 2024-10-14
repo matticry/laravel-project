@@ -7,7 +7,6 @@
 @section('content')
     <div x-data="{
         activeTab: 'ordenes',
-        isModalOpen: false,
         }" class="mb-6">
         <div class="border-b border-blue-200">
             <nav class="-mb-px flex">
@@ -20,7 +19,7 @@
                     Órdenes de Trabajo
                 </a>
                     @can('view.index.reports')
-                        <a href="{{ route('employees.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
+                        <a href="{{ route('reports.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-blue-600 hover:text-blue-800 hover:border-blue-300 focus:outline-none focus:text-blue-800 focus:border-blue-300">
                             Reportes de Técnicos
                         </a>
                     @endcan

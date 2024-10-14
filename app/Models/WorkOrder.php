@@ -50,6 +50,11 @@ class WorkOrder extends Model
         return $this->hasManyThrough(Product::class, DetailWorkOrder::class, 'wo_id', 'pro_id', 'wo_id', 'pro_id');
     }
 
+    public function usedProducts(): HasMany
+    {
+        return $this->hasMany(UsedProduct::class, 'wo_id', 'wo_id');
+    }
+
 
 
 }

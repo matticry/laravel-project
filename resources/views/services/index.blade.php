@@ -144,7 +144,7 @@
                                                 </svg>
                                             </button>
 
-                                            <form id="delete-form-{{ $service->id_serv }}" action="{{ route('service.destroy', $service->id_serv) }}" method="POST" class="hidden">
+                                            <form id="delete-form-{{ $service->id_serv }}" action="{{ route('services.destroy', $service->id_serv) }}" method="POST" class="hidden">
                                                 @csrf
                                                 @method('DELETE')
                                             </form>
