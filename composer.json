@@ -41,7 +41,7 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "php artisan storage:link"
+            "ln -sr storage/app/public public/storage"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
