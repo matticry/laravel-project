@@ -187,7 +187,7 @@ class AuthController extends Controller
         return view('auth.edit.settings');
 
     }
-
+//hola
     public function update(Request $request, $id)
     {
         try {
