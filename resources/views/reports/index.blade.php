@@ -523,7 +523,7 @@
         </div>
         <!-- Modales para las imágenes -->
         @php
-            $slimBaseUrl = 'http://192.168.1.5:8080';
+            $slimBaseUrl = 'https://slim-api-project-e1fc80b7d790.herokuapp.com';
         @endphp
 
         @foreach($reports as $report)
