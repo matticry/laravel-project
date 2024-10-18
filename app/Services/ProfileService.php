@@ -74,4 +74,15 @@ class ProfileService implements ProfileServiceInterface
         $user = Profile::findOrFail($userId);
         $user->roles()->sync($roleIds);
     }
+
+    public function existsUserByDni($dni): bool
+    {
+        return Profile::where('us_dni', $dni)->exists();
+
+    }
+    public function existsUserByEmail($email): bool
+    {
+        return Profile::where('us_email', $email)->exists();
+
+    }
 }

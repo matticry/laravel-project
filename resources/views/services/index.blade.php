@@ -91,7 +91,7 @@
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Numero del Servicio</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Nombre</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Descripción</th>
-                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Precio</th>
+                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Precio (USD)</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Estado</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Tareas</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Acciones</th>
@@ -103,7 +103,7 @@
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $service->id_serv }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $service->name_serv }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $service->description_serv }}</td>
-                            <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $service->price_serv }}</td>
+                            <td class="border-dashed border-t border-gray-200 px-6 py-4">${{ number_format($service->price_serv, 2) }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $service->status_serv == 'A' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                         {{ $service->status_serv == 'A' ? 'Activo' : 'Inactivo' }}
@@ -192,9 +192,13 @@
                                     <label for="description_serv" class="block text-gray-700 text-sm font-bold mb-2">Descripción:</label>
                                     <textarea name="description_serv" id="description_serv" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
                                 </div>
-                                <div class="mb-4">
+                                <div class="relative mb-4">
                                     <label for="price_serv" class="block text-gray-700 text-sm font-bold mb-2">Precio:</label>
-                                    <input type="number" step="0.01" name="price_serv" id="price_serv" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 mt-7">$</span>
+                                    <input type="number" step="0.01" name="price_serv" id="price_serv"
+                                           class="block w-full pl-7 pr-20 rounded-md border border-gray-300 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"
+                                           placeholder="0.00" required>
+                                    <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 mt-7">USD</span>
                                 </div>
                                 <div class="mb-4">
                                     <label for="status_serv" class="block text-gray-700 text-sm font-bold mb-2">Estado:</label>

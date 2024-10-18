@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Report;
+use App\Models\WorkOrder;
 use App\Services\Interfaces\ReportServiceInterface;
 
 class ReportService implements ReportServiceInterface
@@ -30,8 +31,19 @@ class ReportService implements ReportServiceInterface
 
     public function updateReport($id, array $newDetails)
     {
-        $report = Report::findOrFail($id);
+        $report = $this->getReportById($id);
         $report->update($newDetails);
         return $report;
+    }
+
+    public function getRelatedWorkOrder($reportId)
+    {
+        $report = $this->getReportById($reportId);
+        return $report->workOrder;
+    }
+
+    public function getUsedProducts($workOrderId)
+    {
+        return WorkOrder::findOrFail($workOrderId)->usedProducts;
     }
 }

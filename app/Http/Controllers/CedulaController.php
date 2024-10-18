@@ -126,7 +126,7 @@ class CedulaController extends Controller
             $response = $client->request('GET', $url, ['verify' => false]);
 
             // Obtener el código de respuesta HTTP
-            $statusCode = $response->getStatusCode();
+            $response->getStatusCode();
 
             // Obtener el cuerpo de la respuesta
             $body = $response->getBody()->getContents();
@@ -148,6 +148,8 @@ class CedulaController extends Controller
                 ], 404);
             }
 
+
+
         } catch (Exception $e) {
             // Registrar el error exacto para depuración
             Log::error("Error al consumir la API: " . $e->getMessage());
@@ -156,6 +158,7 @@ class CedulaController extends Controller
             ], 500);
         }
     }
+
 
 
 }

@@ -44,6 +44,7 @@
                                     </label>
                                 </div>
                             @endforeach
+
                         </div>
 
                         <div class="flex items-center justify-between mt-8">

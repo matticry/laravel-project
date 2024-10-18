@@ -231,4 +231,11 @@ class WorkOrderService implements WorkOrderRepositoryInterface
     {
         \App\Models\WorkOrderService::where('wo_id', $workOrderId)->delete();
     }
+
+    public function delete($workOrderId)
+    {
+        $workOrder = WorkOrder::findOrFail($workOrderId);
+        $workOrder->delete();
+
+    }
 }

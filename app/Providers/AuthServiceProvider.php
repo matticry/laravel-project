@@ -38,6 +38,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view.index.profile', function ($user) {
             return $user->hasPermission('view.index.profile');
         });
+        Gate::define('view.index.dashboard', function ($user) {
+            return $user->hasPermission('view.index.dashboard');
+        });
         Gate::define('view.index.category', function ($user) {
             return $user->hasPermission('view.index.category');
         });
@@ -125,10 +128,19 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view.index.ordenes', function ($user) {
             return $user->hasPermission('view.index.ordenes');
         });
+        Gate::define('reports.update', function ($user) {
+            return $user->hasPermission('reports.update');
+        });
+        Gate::define('reports.destroy', function ($user) {
+            return $user->hasPermission('reports.destroy');
+        });
 
         //Permisos para botones
         Gate::define('button.add.client', function ($user) {
             return $user->hasPermission('button.add.client');
+        });
+        Gate::define('button.create.reports', function ($user) {
+            return $user->hasPermission('button.create.reports');
         });
         Gate::define('button.add.service', function ($user) {
             return $user->hasPermission('button.add.service');

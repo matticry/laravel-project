@@ -34,10 +34,12 @@
         </div>
 
         <nav class="mt-10">
+            @can('view.index.dashboard')
             <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('dashboard') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('dashboard') }}">
                 <i class="fas fa-tachometer-alt mr-3"></i>
                 DASHBOARD
             </a>
+            @endcan
             @can('view.index.profile')
                 <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('profile.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('profile.index') }}">
                     <i class="fas fa-users mr-3"></i>
@@ -88,7 +90,7 @@
                     <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 h-full w-full z-10"></div>
 
                     <div x-show="dropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">Perfil</a>
+                        <a href="{{ route('edit.profile', ['id' => Auth::user()->us_id]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">Perfil</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">Configuración</a>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf

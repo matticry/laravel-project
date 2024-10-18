@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Report extends Model
 {
@@ -45,5 +46,9 @@ class Report extends Model
         static::creating(function ($model) {
             $model->created_at = $model->freshTimestamp();
         });
+    }
+    public function usedProducts(): HasMany
+    {
+        return $this->hasMany(UsedProduct::class, 'wo_id', 'id_work_order');
     }
 }

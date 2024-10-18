@@ -154,9 +154,29 @@ class CalendarioController extends Controller
 
     }
 
-    public function destroy()
+    public function destroy($workOrderId)
     {
+        try {
+            // Buscar la orden de trabajo
+            $workOrder = $this->workOrderService->findById($workOrderId);
 
+            if (!$workOrder) {
+                return redirect()->route('calendario.ordenes')->withErrors('error', 'No se encontró la orden de trabajo');
+            }
+
+            // Eliminar los productos asociados
+            $this->workOrderService->deleteProducts($workOrder->wo_id);
+
+            // Eliminar los servicios asociados
+            $this->workOrderService->deleteServices($workOrder->wo_id);
+
+            // Eliminar la orden de trabajo
+            $this->workOrderService->delete($workOrder->wo_id);
+
+            return redirect()->route('calendario.ordenes')->with('success', 'Orden de trabajo eliminada con éxito');
+        } catch (Exception $e) {
+            return redirect()->route('calendario.ordenes')->withErrors('error', 'No se pudo eliminar la orden de trabajo: ' . $e->getMessage());
+        }
     }
     public function update(Request $request, $workOrderId)
     {

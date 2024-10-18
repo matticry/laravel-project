@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\CategoryController;
@@ -43,17 +45,26 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/generate-pdf/{id}', [ReportController::class, 'generatePdf'])->name('generate.pdf');
     Route::get('/serve-pdf/{id}', [ReportController::class, 'servePdf'])->name('serve.pdf');
     Route::patch('/reports/{id}/send-email', [ReportController::class, 'sendEmail'])->name('reports.send-email');
+    Route::get('/edit-profile/{id}', [AuthController::class, 'edit'])->name('edit.profile');
+    Route::put('/update-profile/{id}', [AuthController::class, 'update'])->name('update.profile');
+    Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change.password');
+    Route::get('/settings/profile/{id}', [AuthController::class, 'profile'])->name('settings.profile');
+    Route::patch('/reports/{report}/remove-product/{usedProduct}', [ReportController::class, 'removeProduct'])->name('reports.remove-product');
+
+
+
+
 });
+
 
 Route::get('/', function () {
     return view('auth.login');
 })->name('home');  // Dirige al home
 
-// Ruta para recuperar contraseña
-Route::get('/forgot-password', function () {
-    return view('auth.forgot-password');
-})->name('password.request');
-
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class, 'resetPassword'])->name('password.update');
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
@@ -123,6 +134,8 @@ Route::post('/store', [CalendarioController::class, 'store'])->middleware('permi
 Route::get('/workOrder', [CalendarioController::class, 'workOrder'])->middleware('permission:view.index.ordenes')->name('calendario.ordenes');
 Route::put('/workOrder/{workOrderId}', [CalendarioController::class, 'update'])->middleware('permission:calendario.update')->name('calendario.update');
 Route::get('/calendario', [CalendarioController::class, 'index'])->middleware('permission:view.index.calendar')->name('calendario.index');
+
+//Ruta para tener permisos de reportes
 
 // Ruta de dashboard protegida (requiere autenticación)
 Route::get('/dashboard', function () {

@@ -47,8 +47,10 @@ class WorkOrderController extends Controller
         return $validatedData;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+
+
 
         $products = $this->productService->getAllProducts()->take(4);
         $employees = $this->calendarioService->getEmployees();
@@ -57,11 +59,21 @@ class WorkOrderController extends Controller
         $allProducts = $this->productService->getAllProducts();
         $allServices = $this->serviceService->getAllServices();
         $workOrders = $this->workOrderService->getAllWorkOrders();
+
+        if ($request->has('wo_order_code')) {
+            if ($request->has('wo_order_code') && $request->wo_order_code) {
+                $workOrders = $workOrders->filter(function ($workOrder) use ($request) {
+                    return str_contains($workOrder->wo_order_code, $request->wo_order_code);
+                });
+            }
+        }
         return view('calendario.ordenes', compact('workOrders', 'employees', 'clients', 'products', 'services', 'allProducts', 'allServices'));
 
     }
     public function update(Request $request, $workOrderId)
     {
+
+
         try {
             $validatedData = $this->validateDataWorkOrder($request);
 

@@ -54,6 +54,10 @@ class WorkOrder extends Model
     {
         return $this->hasMany(UsedProduct::class, 'wo_id', 'wo_id');
     }
+    public function reports()
+    {
+        return $this->hasMany(Report::class, 'id_work_order', 'wo_id');
+    }
 
 
 

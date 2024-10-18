@@ -7,5 +7,9 @@ interface UserServiceInterface
 {
     public function register(Request $request);
 
+    public function getAuthenticatedUser($id);
+
+    public function updateUser($id, array $validatedData);
+
 
 }

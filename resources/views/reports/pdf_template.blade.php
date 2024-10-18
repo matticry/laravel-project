@@ -309,10 +309,14 @@
         </tr>
     @endforelse
 </table>
+@php
+    $slimBaseUrl = 'http://192.168.1.5:8080';
+@endphp
+
 <div class="signatures">
     <div class="signature-line">
         @if($report->signature_report)
-            <img src="{{ $report->signature_report }}" alt="Firma del Técnico" class="signature-image">
+            <img src="{{ $slimBaseUrl . $report->signature_report }}" alt="Firma del Técnico" class="signature-image">
         @else
             <hr style="width: 80%; border-top: 1px solid #000; margin: 30px auto;">
         @endif
@@ -320,7 +324,7 @@
     </div>
     <div class="signature-line">
         @if($report->signature_client_report)
-            <img src="{{ $report->signature_client_report }}" alt="Firma del Cliente" class="signature-image">
+            <img src="{{ $slimBaseUrl . $report->signature_client_report }}" alt="Firma del Cliente" class="signature-image">
         @else
             <hr style="width: 80%; border-top: 1px solid #000; margin: 30px auto;">
         @endif

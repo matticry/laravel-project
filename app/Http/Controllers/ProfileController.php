@@ -27,7 +27,13 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {
-        try {
+        if ($this->profileService->existsUserByDni($request->us_dni)) {
+            return back()->withErrors(['us_dni' => 'El usuario con este DNI ya existe.'])->withInput();
+        }
+        if ($this->profileService->existsUserByEmail($request->us_email)) {
+            return back()->withErrors(['us_email' => 'El usuario con este correo ya está registrado.'])->withInput();
+        }
+        try{
 
             $validatedData = $request->validate([
                 'us_dni' => 'required|string|max:10',

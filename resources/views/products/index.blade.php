@@ -99,7 +99,7 @@
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Imagen</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Nombre del Producto</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Cantidad</th>
-                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Precio Unitario</th>
+                        <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Precio Unitario (USD)</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Estado</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Categoría</th>
                         <th class="bg-blue-100 sticky top-0 border-b border-gray-200 px-6 py-3 text-blue-600 font-bold tracking-wider uppercase text-xs">Acciones</th>
@@ -121,7 +121,7 @@
                             </td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->pro_name }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->pro_amount }}</td>
-                            <td class="border-dashed border-t border-gray-200 px-6 py-4">{{ $product->pro_unit_price }}</td>
+                            <td class="border-dashed border-t border-gray-200 px-6 py-4">${{ number_format($product->pro_unit_price, 2) }}</td>
                             <td class="border-dashed border-t border-gray-200 px-6 py-4">
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $product->pro_status == 'A' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                         {{ $product->pro_status == 'A' ? 'Activo' : 'Inactivo' }}

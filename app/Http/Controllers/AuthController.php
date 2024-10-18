@@ -171,4 +171,51 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
+    public function edit($id)
+    {
+        $user = $this->userService->getAuthenticatedUser($id);
+        if (!$user) {
+            return back()->withErrors('error', 'Error al obtener el usuario');
+        }
+
+        return view('auth.edit.profile', compact('user'));
+
+    }
+
+    public function settings($id)
+    {
+        return view('auth.edit.settings');
+
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $user = $this->userService->updateUser($id, $request->all());
+            return back()->with('success', 'Usuario actualizado exitosamente');
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        } catch (Exception $e) {
+            return back()->with('error', 'Error al actualizar el usuario: ' . $e->getMessage())->withInput();
+        }
+    }
+
+
+    public function changePassword(Request $request)
+    {
+        try {
+            $this->userService->changePassword(
+                $request->user(),
+                $request->input('current_password'),
+                $request->input('new_password')
+            );
+
+            return back()->with('success', 'Contraseña actualizada exitosamente.');
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        } catch (Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage()])->withInput();
+        }
+    }
+
 }

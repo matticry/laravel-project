@@ -188,62 +188,81 @@
 
         <!-- Modal para crear empleado -->
 
-        <div x-show="activeModal === 'create'" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            role="dialog" aria-modal="true">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <div x-show="activeModal === 'create'" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
                 <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                <div
-                    class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full">
+                    <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+                        <h2 class="mb-4 text-2xl font-bold text-gray-900" id="modal-title">
                             Crear Nuevo Rol
-                        </h3>
-                        <div class="mt-2">
-                            <form action="{{ route('roles.store') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
+                        </h2>
+                        <form action="{{ route('roles.store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-6">
+                                <label for="rol_name" class="block mb-2 text-sm font-medium text-gray-700">Nombre del Rol</label>
+                                <input type="text" name="rol_name" id="rol_name" class="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ingrese el nombre del Rol" required>
+                            </div>
 
-                                <div class="mb-4">
-                                    <label for="rol_name"
-                                           class="block text-gray-700 text-sm font-bold mb-2">Nombre del Rol:</label>
-                                    <input type="text" name="rol_name" placeholder="Ingrese el nombre del Rol" id="rol_name"
-                                           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                           required>
+                            <div class="mb-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-xl font-semibold text-gray-900">Permisos</h3>
+                                    <label class="flex items-center cursor-pointer">
+                                        <span class="mr-2 text-sm font-medium text-gray-700">Seleccionar todos</span>
+                                        <div class="relative">
+                                            <input type="checkbox" id="toggle-all" class="sr-only" @change="toggleAllPermissions">
+                                            <div class="block w-14 h-8 bg-gray-300 rounded-full"></div>
+                                            <div class="absolute w-6 h-6 transition-transform duration-200 ease-in-out transform bg-white rounded-full dot left-1 top-1"></div>
+                                        </div>
+                                    </label>
                                 </div>
-                                <div class="mb-4">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Roles:</label>
-                                    <div class="flex flex-wrap -mx-2">
-                                        @foreach($permissions as $permission)
-                                            <div class="px-2 mb-2">
-                                                <label class="inline-flex items-center">
-                                                    <input type="checkbox"
-                                                           name="permissions[]"
-                                                           value="{{ $permission->perm_id }}"
-                                                           class="absolute opacity-0 w-0 h-0"
-                                                           onchange="this.nextElementSibling.classList.toggle('bg-blue-500'); this.nextElementSibling.classList.toggle('text-white');">
-                                                    <span class="ml-2 text-sm font-medium py-1 px-3 rounded-full border border-gray-300 cursor-pointer transition-colors duration-200 ease-in-out hover:bg-gray-100">
-                                                    {{ $permission->perm_name }}</span>
-                                                </label>
+
+                                <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                                    @php
+                                        $permissionGroups = [
+                                            'Gestión de Roles' => 'role',
+                                            'Gestión de Productos' => 'product',
+                                            'Gestión de Categorías' => 'category',
+                                            'Gestión de Servicios' => 'service',
+                                            'Gestión de Empleados' => 'employee',
+                                            'Órdenes de Trabajo' => 'workorders',
+                                            'Calendario' => 'calendario',
+                                            'Reportes' => 'reports',
+                                            'Botones' => 'button'
+                                        ];
+                                    @endphp
+
+                                    @foreach($permissionGroups as $groupName => $groupKey)
+                                        <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+                                            <h4 class="mb-3 text-lg font-medium text-gray-800">{{ $groupName }}</h4>
+                                            <div class="space-y-2">
+                                                @foreach($permissions as $permission)
+                                                    @if(strpos($permission->perm_name, $groupKey) !== false)
+                                                        <label class="flex items-center">
+                                                            <input type="checkbox" name="permissions[]" value="{{ $permission->perm_id }}" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                                            <span class="ml-2 text-sm text-gray-700">{{ $permission->perm_name }}</span>
+                                                        </label>
+                                                    @endif
+                                                @endforeach
                                             </div>
-                                        @endforeach
-                                    </div>
+                                        </div>
+                                    @endforeach
                                 </div>
-                                <div class="flex items-center justify-end mt-4">
-                                    <button type="button" @click="activeModal = null" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
-                                        Cancelar
-                                    </button>
-                                    <button type="submit"
-                                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                        Guardar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+
+                            <div class="flex justify-end mt-6 space-x-3">
+                                <button type="button" @click="activeModal = null" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Guardar
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 @endsection
 
 
