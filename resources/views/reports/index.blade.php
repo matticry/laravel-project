@@ -521,7 +521,7 @@
                 </tbody>
             </table>
         </div>
-        <!-- Modales para las imágeness -->
+        <!-- Modales para las imágenesss -->
         @php
             $slimBaseUrl = 'https://slim-api-project-e1fc80b7d790.herokuapp.com';
         @endphp
