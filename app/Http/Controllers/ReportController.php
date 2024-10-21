@@ -55,30 +55,34 @@ class ReportController extends Controller
      */
     public function generatePdf($id)
     {
-        $report = Report::with(['workOrder.client', 'workOrder.user', 'workOrder.usedProducts.product', 'workOrder.services.service'])->findOrFail($id);
+        try {
+            $report = Report::with(['workOrder.client', 'workOrder.user', 'workOrder.usedProducts.product', 'workOrder.services.service'])->findOrFail($id);
 
-        if (!$report->workOrder) {
-            return back()->withErrors('No se encontró una orden de trabajo asociada a este reporte.');
+            if (!$report->workOrder) {
+                return back()->withErrors('No se encontró una orden de trabajo asociada a este reporte.');
+            }
+
+            // Generar el HTML con los datos
+            $html = view('reports.pdf_template', compact('report'))->render();
+
+            // Generar el PDF
+            $pdf = PDF::loadHtml($html);
+            $pdfContent = $pdf->output();
+
+            // Guardar el PDF en el reporte
+            $report->pdf_report = $pdfContent;
+            $report->save();
+
+            // Guardar el PDF en la orden de trabajo si es necesario
+            if ($report->workOrder) {
+                $report->workOrder->pdf_report = $pdfContent;
+                $report->workOrder->save();
+            }
+
+            return redirect()->route('reports.index')->with('success', 'Reporte PDF generado correctamente.');
+        }catch (Exception $e) {
+            return back()->withErrors($e->getMessage());
         }
-
-        // Generar el HTML con los datos
-        $html = view('reports.pdf_template', compact('report'))->render();
-
-        // Generar el PDF
-        $pdf = PDF::loadHtml($html);
-        $pdfContent = $pdf->output();
-
-        // Guardar el PDF en el reporte
-        $report->pdf_report = $pdfContent;
-        $report->save();
-
-        // Guardar el PDF en la orden de trabajo si es necesario
-        if ($report->workOrder) {
-            $report->workOrder->pdf_report = $pdfContent;
-            $report->workOrder->save();
-        }
-
-        return redirect()->route('reports.index')->with('success', 'Reporte PDF generado correctamente.');
     }
     public function servePdf($id)
     {
