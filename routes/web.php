@@ -77,6 +77,7 @@ Route::get('/cedula/{cedula}', [CedulaController::class, 'obtenerDatos']);
 Route::get('/user/{id}', [CedulaController::class, 'getInfoUserById']);
 Route::get('/events', [CedulaController::class, 'getEvents'])->name('get.events');
 Route::get('/getWorkOrderById/{id}', [CedulaController::class, 'JsonWorkOrder'])->name('get.workOrder');
+Route::get('/getImage/{id}', [CedulaController::class, 'getUserImageById'])->name('get.image');
 
 
 

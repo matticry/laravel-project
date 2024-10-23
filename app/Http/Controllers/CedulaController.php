@@ -86,12 +86,6 @@ class CedulaController extends Controller
             }),
         ]);
     }
-
-
-
-
-
-
     public function getInfoUserById($id)
     {
         $user = Profile::with('roles')->find($id);
@@ -148,8 +142,6 @@ class CedulaController extends Controller
                 ], 404);
             }
 
-
-
         } catch (Exception $e) {
             // Registrar el error exacto para depuración
             Log::error("Error al consumir la API: " . $e->getMessage());
@@ -159,6 +151,29 @@ class CedulaController extends Controller
         }
     }
 
+    public function getUserImageById($userId)
+    {
+        // Busca el perfil del usuario por su ID
+        $user = Profile::find($userId);
 
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
+
+        if (!$user->us_image) {
+            return response()->json(['error' => 'El usuario no tiene imagen asociada'], 404);
+        }
+
+        // Ruta de la imagen en la carpeta 'storage/app/public/profile_images'
+        $imagePath = storage_path('app/public/profile_images/' . $user->us_image);
+
+        // Verifica si el archivo de imagen existe
+        if (!file_exists($imagePath)) {
+            return response()->json(['error' => 'Imagen no encontrada'], 404);
+        }
+
+        // Retorna la imagen como un archivo
+        return response()->file($imagePath);
+    }
 
 }
