@@ -152,29 +152,23 @@ class CedulaController extends Controller
         }
     }
 
-    public function getUserImageById($userId)
+    public function getUserImage($id)
     {
-        // Busca el perfil del usuario por su ID
-        $user = Profile::find($userId);
+        // Buscar al usuario por ID
+        $user = Profile::find($id);
 
-        if (!$user) {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        // Verificar si el usuario existe
+        if (!$user || !$user->us_image) {
+            return response()->json(['error' => 'Usuario o imagen no encontrada'], 404);
         }
 
-        if (!$user->us_image) {
-            return response()->json(['error' => 'El usuario no tiene imagen asociada'], 404);
-        }
+        // Obtener la ruta de la imagen desde la base de datos
+        $imagePath = $user->us_image;
 
-        // Usa directamente la ruta completa almacenada en la base de datos
-        $imagePath = $user->us_image; // Aquí está la ruta completa: "profile_images/imagen.png"
+        // Construir la URL completa de la imagen
+        $imageUrl = Storage::url($imagePath);
 
-        // Verifica si el archivo de imagen existe en el almacenamiento público
-        if (!Storage::disk('public')->exists($imagePath)) {
-            return response()->json(['error' => 'Imagen no encontrada'], 404);
-        }
-
-        // Retorna la imagen desde el almacenamiento público
-        return response()->file(storage_path('app/public/' . $imagePath));
+        return response()->json(['image_url' => $imageUrl], 200);
     }
 
 }
