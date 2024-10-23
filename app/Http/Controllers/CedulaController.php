@@ -157,7 +157,7 @@ class CedulaController extends Controller
         // Buscar al usuario por ID
         $user = Profile::find($id);
 
-        // Verificar si el usuario existe
+        // Verificar si el usuario existe y tiene una imagen
         if (!$user || !$user->us_image) {
             return response()->json(['error' => 'Usuario o imagen no encontrada'], 404);
         }
@@ -165,10 +165,17 @@ class CedulaController extends Controller
         // Obtener la ruta de la imagen desde la base de datos
         $imagePath = $user->us_image;
 
-        // Construir la URL completa de la imagen
-        $imageUrl = Storage::url($imagePath);
+        // Verificar si el archivo de imagen existe
+        if (!Storage::exists($imagePath)) {
+            return response()->json(['error' => 'Imagen no encontrada en el sistema'], 404);
+        }
 
-        return response()->json(['image_url' => $imageUrl], 200);
+        // Obtener el archivo de imagen desde el almacenamiento
+        $imageContent = Storage::get($imagePath);
+        $mimeType = Storage::mimeType($imagePath);
+
+        // Retornar la imagen con el tipo MIME adecuado
+        return response($imageContent, 200)->header('Content-Type', $mimeType);
     }
 
 }
