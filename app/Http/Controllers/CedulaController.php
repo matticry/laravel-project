@@ -165,8 +165,10 @@ class CedulaController extends Controller
             return response()->json(['error' => 'El usuario no tiene imagen asociada'], 404);
         }
 
+        // Usa directamente la ruta completa almacenada en la base de datos
+        $imagePath = $user->us_image; // Aquí está la ruta completa: "profile_images/imagen.png"
+
         // Verifica si el archivo de imagen existe en el almacenamiento público
-        $imagePath = 'profile_images/' . $user->us_image;
         if (!Storage::disk('public')->exists($imagePath)) {
             return response()->json(['error' => 'Imagen no encontrada'], 404);
         }
