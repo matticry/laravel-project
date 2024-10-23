@@ -7,6 +7,7 @@ use App\Models\WorkOrder;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class CedulaController extends Controller
 {
@@ -164,16 +165,14 @@ class CedulaController extends Controller
             return response()->json(['error' => 'El usuario no tiene imagen asociada'], 404);
         }
 
-        // Ruta de la imagen en la carpeta 'storage/app/public/profile_images'
-        $imagePath = storage_path('/public/' . $user->us_image);
-
-        // Verifica si el archivo de imagen existe
-        if (!file_exists($imagePath)) {
+        // Verifica si el archivo de imagen existe en el almacenamiento público
+        $imagePath = 'profile_images/' . $user->us_image;
+        if (!Storage::disk('public')->exists($imagePath)) {
             return response()->json(['error' => 'Imagen no encontrada'], 404);
         }
 
-        // Retorna la imagen como un archivo
-        return response()->file($imagePath);
+        // Retorna la imagen desde el almacenamiento público
+        return response()->file(storage_path('app/public/' . $imagePath));
     }
 
 }
