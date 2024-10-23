@@ -165,7 +165,7 @@ class CedulaController extends Controller
         }
 
         // Ruta de la imagen en la carpeta 'storage/app/public/profile_images'
-        $imagePath = storage_path('app/public/profile_images/' . $user->us_image);
+        $imagePath = storage_path('/public/' . $user->us_image);
 
         // Verifica si el archivo de imagen existe
         if (!file_exists($imagePath)) {
