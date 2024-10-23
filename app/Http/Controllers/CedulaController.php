@@ -152,26 +152,4 @@ class CedulaController extends Controller
         }
     }
 
-    public function getUserImage($id)
-    {
-        // Buscar al usuario por ID
-        $user = Profile::find($id);
-
-        // Verificar si el usuario existe y si tiene una imagen
-        if (!$user || !$user->us_image) {
-            return response()->json(['error' => 'Usuario o imagen no encontrada'], 404);
-        }
-
-        // Obtener la ruta de la imagen desde la base de datos
-        $imagePath = $user->us_image;
-
-        // Verificar si la imagen existe en el almacenamiento
-        if (!Storage::exists($imagePath)) {
-            return response()->json(['error' => 'Imagen no encontrada en el almacenamiento'], 404);
-        }
-
-        // Retornar la imagen directamente como una respuesta
-        return Storage::response($imagePath);
-    }
-
 }
