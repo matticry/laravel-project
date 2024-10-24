@@ -1,3 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensaje Especial</title>
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fuentes de Google (opcionales para mejorar la tipografía) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos personalizados adicionales -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Animación personalizada para el brillo */
+        @keyframes sparkle {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .sparkle {
+            animation: sparkle 2s infinite;
+        }
+
+        /* Mejora de las animaciones de flores */
+        @keyframes gentleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .flower-bounce {
+            animation: gentleBounce 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body>
 <div class="min-h-screen relative overflow-hidden bg-gradient-to-b from-orange-400 via-pink-500 to-purple-900">
     <!-- Sol -->
     <div class="absolute top-20 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-yellow-500 rounded-full blur-lg opacity-75"></div>
@@ -11,14 +53,18 @@
         </div>
     </div>
 
-    <!-- Flores -->
-    <div class="absolute bottom-20 left-10 animate-bounce">
+    <!-- Flores con animación mejorada -->
+    <div class="absolute bottom-20 left-10 flower-bounce">
         <div class="w-4 h-4 bg-pink-400 rounded-full"></div>
         <div class="w-4 h-8 bg-green-500 -mt-1 rotate-12"></div>
     </div>
-    <div class="absolute bottom-24 left-20 animate-bounce delay-100">
+    <div class="absolute bottom-24 left-20 flower-bounce" style="animation-delay: 0.5s;">
         <div class="w-4 h-4 bg-purple-400 rounded-full"></div>
         <div class="w-4 h-8 bg-green-500 -mt-1 -rotate-12"></div>
+    </div>
+    <div class="absolute bottom-16 left-32 flower-bounce" style="animation-delay: 1s;">
+        <div class="w-4 h-4 bg-pink-300 rounded-full"></div>
+        <div class="w-4 h-8 bg-green-500 -mt-1 rotate-6"></div>
     </div>
 
     <!-- Mensaje principal -->
@@ -33,7 +79,23 @@
         </p>
     </div>
 
-    <!-- Efecto brillante para los ojos -->
-    <div class="absolute top-1/3 left-1/4 w-2 h-2 bg-white rounded-full animate-ping"></div>
-    <div class="absolute top-1/3 right-1/4 w-2 h-2 bg-white rounded-full animate-ping delay-100"></div>
+    <!-- Efectos brillantes para los ojos -->
+    <div class="absolute top-1/3 left-1/4 w-2 h-2 bg-white rounded-full sparkle"></div>
+    <div class="absolute top-1/3 right-1/4 w-2 h-2 bg-white rounded-full sparkle" style="animation-delay: 1s;"></div>
 </div>
+
+<!-- Script opcional para efectos adicionales -->
+<script>
+    // Puedes agregar efectos interactivos aquí si lo deseas
+    document.addEventListener('DOMContentLoaded', function() {
+        // Por ejemplo, hacer que el mensaje aparezca gradualmente
+        const message = document.querySelector('h1');
+        message.style.opacity = 0;
+        setTimeout(() => {
+            message.style.transition = 'opacity 2s ease-in-out';
+            message.style.opacity = 1;
+        }, 500);
+    });
+</script>
+</body>
+</html>
