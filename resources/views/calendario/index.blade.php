@@ -435,38 +435,72 @@
             backdrop_can_close="true"
             ok_button_label="Cerrar"
             center_action_buttons="true">
-            size="big">
             <h1 class="text-lg font-bold mb-4">Detalles de Orden de Trabajo</h1>
 
-            <div class="space-y-4">
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Código de Orden</p>
-                    <p id="wo-code" class="text-sm text-gray-900"></p>
+            <!-- Header con imagen del cliente -->
+            <div class="flex justify-between items-start mb-6">
+                <div class="flex-1">
+                    <h1 class="text-lg font-bold">Detalles de Orden de Trabajo</h1>
                 </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Cliente</p>
-                    <p id="wo-client" class="text-sm text-gray-900"></p>
+                <div class="w-24 h-24 relative">
+                    <img id="client-image"
+                         alt="Foto del cliente"
+                         class="w-full h-full object-cover rounded-full border-2 border-gray-200 shadow-lg"
+                         loading="lazy">
                 </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Fecha Inicio</p>
-                    <p id="wo-start-date" class="text-sm text-gray-900"></p>
+            </div>
+
+            <!-- Contenido -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Columna izquierda -->
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Código de Orden</p>
+                        <p id="wo-code" class="text-sm text-gray-900"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Fecha Inicio</p>
+                        <p id="wo-start-date" class="text-sm text-gray-900"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Estado</p>
+                        <p id="wo-status" class="text-sm text-gray-900"></p>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Estado</p>
-                    <p id="wo-status" class="text-sm text-gray-900"></p>
+
+                <!-- Columna derecha -->
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Cliente</p>
+                        <p id="wo-client" class="text-sm text-gray-900 font-semibold"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Teléfono</p>
+                        <p id="wo-client-phone" class="text-sm text-gray-900"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Dirección</p>
+                        <p id="wo-client-address" class="text-sm text-gray-900"></p>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Descripción</p>
-                    <p id="wo-description" class="text-sm text-gray-900"></p>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Servicios</p>
-                    <div id="wo-services" class="mt-2"></div>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Total</p>
-                    <p id="wo-total" class="text-sm text-gray-900"></p>
-                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="mt-4">
+                <p class="text-sm font-medium text-gray-500">Descripción</p>
+                <p id="wo-description" class="text-sm text-gray-900"></p>
+            </div>
+
+            <!-- Servicios -->
+            <div class="mt-4">
+                <p class="text-sm font-medium text-gray-500">Servicios</p>
+                <div id="wo-services" class="mt-2"></div>
+            </div>
+
+            <!-- Total -->
+            <div class="mt-4">
+                <p class="text-sm font-medium text-gray-500">Total</p>
+                <p id="wo-total" class="text-sm text-gray-900 font-bold"></p>
             </div>
         </x-bladewind::modal>
 
@@ -629,11 +663,23 @@
 
             applyCustomStyles();
         });
+        function generateAvatarUrl(name) {
+            // Codifica el nombre para la URL
+            const encodedName = encodeURIComponent(name);
+            return `https://ui-avatars.com/api/?name=${encodedName}&background=random&size=128`;
+        }
 
             function updateModalContent(data) {
+                function generateAvatarUrl(name) {
+                    // Codifica el nombre para la URL
+                    const encodedName = encodeURIComponent(name);
+                    return `https://ui-avatars.com/api/?name=${encodedName}&background=random&size=128`;
+                }
                 // Actualizar el contenido del modal con los datos
                 document.getElementById('wo-code').textContent = data.wo_order_code;
                 document.getElementById('wo-client').textContent = data.client.cli_name;
+                document.getElementById('wo-client-phone').textContent = data.client.cli_phone;
+                document.getElementById('wo-client-address').textContent = data.client.cli_address;
                 document.getElementById('wo-start-date').textContent = data.wo_start_date;
                 document.getElementById('wo-status').textContent = data.wo_status;
                 document.getElementById('wo-description').textContent = data.wo_description;
@@ -651,7 +697,7 @@
             ${service.tasks.length > 0 ? '<p class="mt-1">Tareas:</p>' : ''}
             <ul class="list-disc ml-4">
                 ${service.tasks.map(task => `
-                    <li>${task.task_name} - Estado: ${task.task_status}</li>
+                    <li>Tarea ID: ${task.task_id} - Estado: ${task.task_status}</li>
                 `).join('')}
             </ul>
         `;
