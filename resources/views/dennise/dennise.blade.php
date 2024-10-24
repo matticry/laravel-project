@@ -44,6 +44,12 @@
     <!-- Sol -->
     <div class="absolute top-20 left-1/2 transform -translate-x-1/2 w-32 h-32 bg-yellow-500 rounded-full blur-lg opacity-75"></div>
 
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 image-container float-animation">
+        <img src="https://res.cloudinary.com/dpabol1z3/image/upload/v1729739473/aloor0qbmjnesfe49y4g.jpg"
+             alt="Hermosa chica"
+             class="w-64 h-64 object-cover rounded-full border-4 border-white shadow-lg">
+    </div>
+
     <!-- Montañas -->
     <div class="absolute bottom-0 w-full">
         <div class="absolute bottom-0 w-full">
@@ -79,6 +85,17 @@
         </p>
     </div>
 
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+        <button id="musicButton" class="music-button bg-white text-purple-900 px-6 py-3 rounded-full font-bold flex items-center space-x-2 hover:bg-purple-100">
+            <span id="musicIcon">▶️</span>
+            <span>Dale Click</span>
+        </button>
+    </div>
+    <audio id="music">
+        <source src="{{ asset('music/dennise.mp3') }}" type="audio/mpeg">
+    </audio>
+</div>
+
     <!-- Efectos brillantes para los ojos -->
     <div class="absolute top-1/3 left-1/4 w-2 h-2 bg-white rounded-full sparkle"></div>
     <div class="absolute top-1/3 right-1/4 w-2 h-2 bg-white rounded-full sparkle" style="animation-delay: 1s;"></div>
@@ -95,6 +112,25 @@
             message.style.transition = 'opacity 2s ease-in-out';
             message.style.opacity = 1;
         }, 500);
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const musicButton = document.getElementById('musicButton');
+        const music = document.getElementById('music');
+        const musicIcon = document.getElementById('musicIcon');
+        let isPlaying = false;
+
+        musicButton.addEventListener('click', function() {
+            if (isPlaying) {
+                music.pause();
+                musicIcon.textContent = '▶️';
+            } else {
+                music.play();
+                musicIcon.textContent = '⏸️';
+            }
+            isPlaying = !isPlaying;
+        });
     });
 </script>
 </body>
