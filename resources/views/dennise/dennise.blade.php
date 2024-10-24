@@ -74,7 +74,8 @@
     </div>
 
     <!-- Mensaje principal -->
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+    <!-- Mensaje principal -->
+    <div class="absolute top-1/4 left-1/2 transform -translate-x-1/2 text-center">
         <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 tracking-wide">
             En tus ojos encuentro
         </h1>
