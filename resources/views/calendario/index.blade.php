@@ -681,6 +681,28 @@
             clientImage.onerror = function() {
                 this.src = generateAvatarUrl(data.client.cli_name);
             }
+            const phoneElement = document.getElementById('wo-client-phone');
+            if (!data.client.cli_phone || data.client.cli_phone.trim() === '') {
+                phoneElement.innerHTML = `
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 italic text-sm">
+                No registró número
+            </span>
+        `;
+            } else {
+                phoneElement.textContent = data.client.cli_phone;
+            }
+
+            // Dirección con validación
+            const addressElement = document.getElementById('wo-client-address');
+            if (!data.client.cli_address || data.client.cli_address.trim() === '') {
+                addressElement.innerHTML = `
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 italic text-sm">
+                No registró dirección
+            </span>
+        `;
+            } else {
+                addressElement.textContent = data.client.cli_address;
+            }
 
             // Resto de tu código actual
             document.getElementById('wo-code').textContent = data.wo_order_code;
