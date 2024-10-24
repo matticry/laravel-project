@@ -435,7 +435,6 @@
             backdrop_can_close="true"
             ok_button_label="Cerrar"
             center_action_buttons="true">
-            <h1 class="text-lg font-bold mb-4">Detalles de Orden de Trabajo</h1>
 
             <!-- Header con imagen del cliente -->
             <div class="flex justify-between items-start mb-6">
@@ -664,34 +663,42 @@
             applyCustomStyles();
         });
         function generateAvatarUrl(name) {
-            // Codifica el nombre para la URL
             const encodedName = encodeURIComponent(name);
             return `https://ui-avatars.com/api/?name=${encodedName}&background=random&size=128`;
         }
 
-            function updateModalContent(data) {
-                function generateAvatarUrl(name) {
-                    // Codifica el nombre para la URL
-                    const encodedName = encodeURIComponent(name);
-                    return `https://ui-avatars.com/api/?name=${encodedName}&background=random&size=128`;
-                }
-                // Actualizar el contenido del modal con los datos
-                document.getElementById('wo-code').textContent = data.wo_order_code;
-                document.getElementById('wo-client').textContent = data.client.cli_name;
-                document.getElementById('wo-client-phone').textContent = data.client.cli_phone;
-                document.getElementById('wo-client-address').textContent = data.client.cli_address;
-                document.getElementById('wo-start-date').textContent = data.wo_start_date;
-                document.getElementById('wo-status').textContent = data.wo_status;
-                document.getElementById('wo-description').textContent = data.wo_description;
-                document.getElementById('wo-total').textContent = `$${data.wo_total}`;
+        function updateModalContent(data) {
+            // Actualizar imagen del cliente
+            const clientImage = document.getElementById('client-image');
+            if (data.client.cli_image) {
+                clientImage.src = data.client.cli_image;
+            } else {
+                // Si no hay imagen, usar el avatar generado
+                clientImage.src = generateAvatarUrl(data.client.cli_name);
+            }
 
-                // Mostrar servicios
-                const servicesContainer = document.getElementById('wo-services');
-                servicesContainer.innerHTML = '';
-                data.services.forEach(service => {
-                    const serviceElement = document.createElement('div');
-                    serviceElement.className = 'mt-2 p-2 border rounded';
-                    serviceElement.innerHTML = `
+            // Manejar errores de carga de imagen
+            clientImage.onerror = function() {
+                this.src = generateAvatarUrl(data.client.cli_name);
+            }
+
+            // Resto de tu código actual
+            document.getElementById('wo-code').textContent = data.wo_order_code;
+            document.getElementById('wo-client').textContent = data.client.cli_name;
+            document.getElementById('wo-client-phone').textContent = data.client.cli_phone;
+            document.getElementById('wo-client-address').textContent = data.client.cli_address;
+            document.getElementById('wo-start-date').textContent = data.wo_start_date;
+            document.getElementById('wo-status').textContent = data.wo_status;
+            document.getElementById('wo-description').textContent = data.wo_description;
+            document.getElementById('wo-total').textContent = `$${data.wo_total}`;
+
+            // Mostrar servicios
+            const servicesContainer = document.getElementById('wo-services');
+            servicesContainer.innerHTML = '';
+            data.services.forEach(service => {
+                const serviceElement = document.createElement('div');
+                serviceElement.className = 'mt-2 p-2 border rounded';
+                serviceElement.innerHTML = `
             <p class="font-medium">Servicio ID: ${service.service_id}</p>
             <p>Precio: $${service.price_service}</p>
             ${service.tasks.length > 0 ? '<p class="mt-1">Tareas:</p>' : ''}
@@ -701,9 +708,9 @@
                 `).join('')}
             </ul>
         `;
-                    servicesContainer.appendChild(serviceElement);
-                });
-            }
+                servicesContainer.appendChild(serviceElement);
+            });
+        }
 
         function applyCustomStyles() {
             document.querySelectorAll('.fc-col-header-cell').forEach(cell => {
