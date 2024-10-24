@@ -99,6 +99,7 @@ Route::get('/getImage/{id}', [CedulaController::class, 'getUserImage'])->name('g
 
 
 
+
 // Ruta para tener el permiso de actualizar el perfil
 Route::put('/{id}/update', [ProfileController::class, 'update'])->middleware('permission:profile.update')->name('profile.update');
 Route::delete('/{id}/destroy', [ProfileController::class, 'destroy'])->middleware('permission:profile.destroy')->name('profile.destroy');

@@ -430,6 +430,45 @@
                 </div>
             </form>
         </x-bladewind::modal>
+        <x-bladewind::modal
+            name="work-order-details"
+            backdrop_can_close="true"
+            ok_button_label="Cerrar"
+            center_action_buttons="true">
+            size="big">
+            <h1 class="text-lg font-bold mb-4">Detalles de Orden de Trabajo</h1>
+
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Código de Orden</p>
+                    <p id="wo-code" class="text-sm text-gray-900"></p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Cliente</p>
+                    <p id="wo-client" class="text-sm text-gray-900"></p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Fecha Inicio</p>
+                    <p id="wo-start-date" class="text-sm text-gray-900"></p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Estado</p>
+                    <p id="wo-status" class="text-sm text-gray-900"></p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Descripción</p>
+                    <p id="wo-description" class="text-sm text-gray-900"></p>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Servicios</p>
+                    <div id="wo-services" class="mt-2"></div>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Total</p>
+                    <p id="wo-total" class="text-sm text-gray-900"></p>
+                </div>
+            </div>
+        </x-bladewind::modal>
 
         <div class="container mx-auto px-4 py-8">
             <div class="flex justify-between mb-6 text-sm">
@@ -507,6 +546,19 @@
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
+
+                eventClick: function(info) {
+                    const workOrderId = info.event.id;
+
+                    fetch(`/getWorkOrderById/${workOrderId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Actualizar el contenido del modal
+                            updateModalContent(data);
+                            // Abrir el modal usando Bladewind
+                            showModal('work-order-details');
+                        });
+                },
                 initialView: 'timeGridWeek',
                 allDaySlot: false,
                 slotMinTime: '06:00:00',
@@ -577,6 +629,35 @@
 
             applyCustomStyles();
         });
+
+            function updateModalContent(data) {
+                // Actualizar el contenido del modal con los datos
+                document.getElementById('wo-code').textContent = data.wo_order_code;
+                document.getElementById('wo-client').textContent = data.client.cli_name;
+                document.getElementById('wo-start-date').textContent = data.wo_start_date;
+                document.getElementById('wo-status').textContent = data.wo_status;
+                document.getElementById('wo-description').textContent = data.wo_description;
+                document.getElementById('wo-total').textContent = `$${data.wo_total}`;
+
+                // Mostrar servicios
+                const servicesContainer = document.getElementById('wo-services');
+                servicesContainer.innerHTML = '';
+                data.services.forEach(service => {
+                    const serviceElement = document.createElement('div');
+                    serviceElement.className = 'mt-2 p-2 border rounded';
+                    serviceElement.innerHTML = `
+            <p class="font-medium">Servicio ID: ${service.service_id}</p>
+            <p>Precio: $${service.price_service}</p>
+            ${service.tasks.length > 0 ? '<p class="mt-1">Tareas:</p>' : ''}
+            <ul class="list-disc ml-4">
+                ${service.tasks.map(task => `
+                    <li>Tarea ID: ${task.task_id} - Estado: ${task.task_status}</li>
+                `).join('')}
+            </ul>
+        `;
+                    servicesContainer.appendChild(serviceElement);
+                });
+            }
 
         function applyCustomStyles() {
             document.querySelectorAll('.fc-col-header-cell').forEach(cell => {
