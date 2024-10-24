@@ -651,7 +651,7 @@
             ${service.tasks.length > 0 ? '<p class="mt-1">Tareas:</p>' : ''}
             <ul class="list-disc ml-4">
                 ${service.tasks.map(task => `
-                    <li>Tarea ID: ${task.task_id} - Estado: ${task.task_status}</li>
+                    <li>${task.task_name} - Estado: ${task.task_status}</li>
                 `).join('')}
             </ul>
         `;

@@ -70,6 +70,7 @@ class CedulaController extends Controller
                         return [
                             'wo_task_id' => $task->wo_task_id,
                             'task_id' => $task->task_id,
+                            'task_name' => $task->task_name,
                             'task_status' => $task->task_status,
                             // Añade más campos de la tarea según sea necesario
                         ];
