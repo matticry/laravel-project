@@ -668,19 +668,6 @@
         }
 
         function updateModalContent(data) {
-            // Actualizar imagen del cliente
-            const clientImage = document.getElementById('client-image');
-            if (data.client.cli_image) {
-                clientImage.src = data.client.cli_image;
-            } else {
-                // Si no hay imagen, usar el avatar generado
-                clientImage.src = generateAvatarUrl(data.client.cli_name);
-            }
-
-            // Manejar errores de carga de imagen
-            clientImage.onerror = function() {
-                this.src = generateAvatarUrl(data.client.cli_name);
-            }
             const phoneElement = document.getElementById('wo-client-phone');
             if (!data.client.cli_phone || data.client.cli_phone.trim() === '') {
                 phoneElement.innerHTML = `
@@ -702,6 +689,19 @@
         `;
             } else {
                 addressElement.textContent = data.client.cli_address;
+            }
+            // Actualizar imagen del cliente
+            const clientImage = document.getElementById('client-image');
+            if (data.client.cli_image) {
+                clientImage.src = data.client.cli_image;
+            } else {
+                // Si no hay imagen, usar el avatar generado
+                clientImage.src = generateAvatarUrl(data.client.cli_name);
+            }
+
+            // Manejar errores de carga de imagen
+            clientImage.onerror = function() {
+                this.src = generateAvatarUrl(data.client.cli_name);
             }
 
             // Resto de tu código actual
