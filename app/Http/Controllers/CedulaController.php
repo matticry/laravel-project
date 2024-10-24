@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Storage;
 class CedulaController extends Controller
 {
 
+    public function Dennise()
+    {
+        return view('dennise.dennise');
+
+    }
+
     public function getWorkOrderById($workOrderId)
     {
         $workOrder = WorkOrder::with(['services.tasks', 'details.product', 'client', 'user'])
