@@ -668,6 +668,7 @@
         }
 
         function updateModalContent(data) {
+            // Validación de teléfono
             const phoneElement = document.getElementById('wo-client-phone');
             if (!data.client.cli_phone || data.client.cli_phone.trim() === '') {
                 phoneElement.innerHTML = `
@@ -679,7 +680,7 @@
                 phoneElement.textContent = data.client.cli_phone;
             }
 
-            // Dirección con validación
+            // Validación de dirección
             const addressElement = document.getElementById('wo-client-address');
             if (!data.client.cli_address || data.client.cli_address.trim() === '') {
                 addressElement.innerHTML = `
@@ -690,25 +691,25 @@
             } else {
                 addressElement.textContent = data.client.cli_address;
             }
+
             // Actualizar imagen del cliente
             const clientImage = document.getElementById('client-image');
             if (data.client.cli_image) {
                 clientImage.src = data.client.cli_image;
             } else {
-                // Si no hay imagen, usar el avatar generado
                 clientImage.src = generateAvatarUrl(data.client.cli_name);
             }
 
-            // Manejar errores de carga de imagen
             clientImage.onerror = function() {
                 this.src = generateAvatarUrl(data.client.cli_name);
             }
 
-            // Resto de tu código actual
+            // Actualizar resto de datos
             document.getElementById('wo-code').textContent = data.wo_order_code;
             document.getElementById('wo-client').textContent = data.client.cli_name;
-            document.getElementById('wo-client-phone').textContent = data.client.cli_phone;
-            document.getElementById('wo-client-address').textContent = data.client.cli_address;
+            // QUITAR ESTAS DOS LÍNEAS que están sobrescribiendo los valores:
+            // document.getElementById('wo-client-phone').textContent = data.client.cli_phone;
+            // document.getElementById('wo-client-address').textContent = data.client.cli_address;
             document.getElementById('wo-start-date').textContent = data.wo_start_date;
             document.getElementById('wo-status').textContent = data.wo_status;
             document.getElementById('wo-description').textContent = data.wo_description;
