@@ -30,7 +30,7 @@
                     </a>
                 @endcan
                     @can('view.index.service')
-                    <a href="{{ route('services.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
+                    <a href="{{ route('categories-redis.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
                         Categorias con Redis
                     </a>
                 @endcan
