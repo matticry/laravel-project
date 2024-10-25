@@ -15,7 +15,7 @@ class CategoryRedisController extends Controller
         {
             $categories = Category::all();
 
-            Redis::set('categories', json_encode($categories));
+            Redis::set('categories', json_encode($categories), 'EX', 3600);
 
         } else {
             $categories = json_decode($categories, true);
