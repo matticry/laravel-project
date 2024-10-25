@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CategoryRedisController;
 use App\Http\Controllers\CedulaController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProductController;
@@ -38,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('profile', ProfileController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('calendario', CalendarioController::class);
+    Route::resource('categories-redis', CategoryRedisController::class);
     Route::get('/workOrder', [CalendarioController::class, 'workOrder'])->name('calendario.ordenes');
     Route::patch('/workorders/{workorder}/authorize', [CalendarioController::class, 'authorizeWorkOrder'])->name('workorders.authorize');
     Route::put('/workOrder/{workOrderId}', [CalendarioController::class, 'update'])->name('calendario.update');

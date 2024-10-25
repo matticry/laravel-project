@@ -29,7 +29,7 @@
                         Servicios
                     </a>
                 @endcan
-                    @can('view.index.service')
+                @can('view.index.service')
                     <a href="{{ route('services.index') }}" class="cursor-pointer border-b-2 border-transparent py-4 px-6 inline-block font-medium text-sm leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300">
                         Categorias con Redis
                     </a>
@@ -172,7 +172,7 @@
                             Crear Nueva Categoría
                         </h3>
                         <div class="mt-2">
-                            <form action="{{ route('categories.store') }}" method="POST">
+                            <form  method="POST">
                                 @csrf
                                 <div class="mb-4">
                                     <label for="cat_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
@@ -205,9 +205,4 @@
         </div>
     </div>
 @endsection
-<script>
-    function hideModal(modalName) {
-        // Asumiendo que estás usando Bladewind
-        Bladewind.closeModal(modalName);
-    }
-</script>
+
