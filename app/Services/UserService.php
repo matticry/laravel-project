@@ -44,6 +44,7 @@ class UserService implements UserServiceInterface
             'us_address' => $request->us_address,
             'us_password' => Hash::make($validated['us_password']),
             'us_image' => $imagePath,
+            'date_of_birth' => $request->date_of_birth
         ]);
     }
 

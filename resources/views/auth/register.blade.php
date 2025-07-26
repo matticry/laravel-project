@@ -50,7 +50,12 @@
                 <label for="us_email" class="block text-sm font-medium text-gray-700">Email *</label>
                 <input type="email" name="us_email" id="us_email" placeholder="ejemplo@correo.com" class="mt-1 block w-full border-2 border-blue-200 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 h-12 px-3" required>
                 <span id="emailValidationMessage" class="text-sm mt-1"></span>
-
+            </div>
+            <div>
+                <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento *</label>
+                <input type="date" name="date_of_birth" id="date_of_birth"
+                       class="mt-1 block w-full border-2 border-blue-200 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 h-12 px-3"
+                       required>
             </div>
             <div>
                 <label for="us_first_phone" class="block text-sm font-medium text-gray-700">Teléfono Principal *</label>

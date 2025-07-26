@@ -123,7 +123,7 @@ class CedulaController extends Controller
     }
     public function obtenerDatos($cedula)
     {
-        $url = "https://datos.elixirsa.net/cedula1/$cedula";
+        $url = "https://datos.elixirsa.net/cedula/$cedula";
         $client = new Client();
 
         try {
