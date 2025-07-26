@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\PetRepositoryInterface;
+use App\Repositories\PetRepository;
 use App\Services\CategoryService;
 use App\Services\EmployeeService;
 use App\Services\Interfaces\CategoryServiceInterface;
@@ -44,6 +46,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CategoryServiceInterface::class, CategoryService::class);
         $this->app->bind(WorkOrderRepositoryInterface::class, WorkOrderService::class);
         $this->app->bind(ReportServiceInterface::class, ReportService::class);
+        $this->app->bind(PetRepositoryInterface::class, PetRepository::class);
+
 
 
 

@@ -46,6 +46,12 @@
                     USUARIOS
                 </a>
             @endcan
+                @can('view.index.pets')
+                    <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('pets.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('pets.index') }}">
+                        <i class="fas fa-users mr-3"></i>
+                        MASCOTAS
+                    </a>
+                @endcan
             @can('view.index.product')
                 <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('products.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('products.index') }}">
                     <i class="fas fa-box mr-3"></i>

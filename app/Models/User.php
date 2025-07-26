@@ -64,4 +64,19 @@ class User extends Authenticatable
 
     }
 
+    public function pets(): HasMany
+    {
+        return $this->hasMany(Pet::class, 'id_usu', 'us_id');
+    }
+
+    public function activePets(): HasMany
+    {
+        return $this->hasMany(Pet::class, 'id_usu', 'us_id')->where('status_pet', 'A');
+    }
+
+    public function inactivePets(): HasMany
+    {
+        return $this->hasMany(Pet::class, 'id_usu', 'us_id')->where('status_pet', 'I');
+    }
+
 }

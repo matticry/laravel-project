@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CategoryRedisController;
 use App\Http\Controllers\CedulaController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\PetController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
@@ -52,6 +53,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change.password');
     Route::get('/settings/profile/{id}', [AuthController::class, 'profile'])->name('settings.profile');
     Route::patch('/reports/{report}/remove-product/{usedProduct}', [ReportController::class, 'removeProduct'])->name('reports.remove-product');
+
+    Route::get('/pets/user/{userId}', [PetController::class, 'userPets'])->name('pets.user');
+    Route::get('/pets-search', [PetController::class, 'search'])->name('pets.search');
+    Route::get('/pets-statistics', [PetController::class, 'statistics'])->name('pets.statistics');
+    Route::patch('/pets/{id}/activate', [PetController::class, 'activate'])->name('pets.activate');
+    Route::patch('/pets/{id}/deactivate', [PetController::class, 'deactivate'])->name('pets.deactivate');
+    Route::post('/pets/search-breed-image', [PetController::class, 'searchBreedImage'])->name('pets.search-breed-image');
+    Route::get('/pets/search-users', [PetController::class, 'searchUsersForPets'])->name('pets.search-users');
+    Route::get('/pets/user-profile/{userId}', [PetController::class, 'userPetsProfile'])->name('pets.user-profile');
+    Route::resource('pets', PetController::class);
+
+
 
 
 

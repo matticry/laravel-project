@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 class Profile extends Model
@@ -28,6 +29,21 @@ class Profile extends Model
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'tbl_rol_user', 'us_id', 'role_id');
+    }
+
+    public function pets(): HasMany
+    {
+        return $this->hasMany(Pet::class, 'id_usu', 'us_id');
+    }
+
+    public function activePets(): HasMany
+    {
+        return $this->hasMany(Pet::class, 'id_usu', 'us_id')->where('status_pet', 'A');
+    }
+
+    public function inactivePets(): HasMany
+    {
+        return $this->hasMany(Pet::class, 'id_usu', 'us_id')->where('status_pet', 'I');
     }
     public function isEmailVerified(): bool
     {
