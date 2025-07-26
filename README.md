@@ -314,7 +314,6 @@ Para problemas o consultas sobre el proyecto:
 - [ ] Historial médico de mascotas
 - [ ] Integración con más APIs de mascotas
 - [ ] Sistema de citas veterinarias
-
 ---
 
 **Desarrollado con ❤️ usando Laravel y las mejores prácticas de desarrollo**
