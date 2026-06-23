@@ -8,6 +8,7 @@ use App\Services\CategoryService;
 use App\Services\EmployeeService;
 use App\Services\Interfaces\CategoryServiceInterface;
 use App\Services\Interfaces\EmployeeServiceInterface;
+use App\Services\Interfaces\InvoiceServiceInterface;
 use App\Services\Interfaces\ProductServiceInterface;
 use App\Services\Interfaces\ProfileServiceInterface;
 use App\Services\Interfaces\ReportServiceInterface;
@@ -16,6 +17,7 @@ use App\Services\Interfaces\ServiceServiceInterface;
 use App\Services\Interfaces\TaskServiceInterface;
 use App\Services\Interfaces\UserServiceInterface;
 use App\Services\Interfaces\WorkOrderRepositoryInterface;
+use App\Services\InvoiceService;
 use App\Services\ProductService;
 use App\Services\ProfileService;
 use App\Services\ReportService;
@@ -47,11 +49,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(WorkOrderRepositoryInterface::class, WorkOrderService::class);
         $this->app->bind(ReportServiceInterface::class, ReportService::class);
         $this->app->bind(PetRepositoryInterface::class, PetRepository::class);
+        $this->app->bind(InvoiceServiceInterface::class, InvoiceService::class);
 
-
-
-
-        //
     }
 
     /**

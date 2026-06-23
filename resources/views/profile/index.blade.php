@@ -156,8 +156,8 @@
                                 @if($user->us_status)
                                     <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $user->us_status == 'A' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                    {{ $user->us_status == 'A' ? 'Activo' : 'Inactivo' }}
-                </span>
+                                        {{ $user->us_status == 'A' ? 'Activo' : 'Inactivo' }}
+                                    </span>
                                 @else
                                     <span
                                         class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"> No actualizado</span>
