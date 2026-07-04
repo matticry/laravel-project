@@ -7,6 +7,7 @@ use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CategoryRedisController;
 use App\Http\Controllers\CedulaController;
+use App\Http\Controllers\ConsultaController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\ProductController;
@@ -39,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('services', ServiceController::class);
     Route::resource('profile', ProfileController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('consultas', ConsultaController::class);
+
     Route::resource('calendario', CalendarioController::class);
     Route::resource('categories-redis', CategoryRedisController::class);
     Route::get('/workOrder', [CalendarioController::class, 'workOrder'])->name('calendario.ordenes');

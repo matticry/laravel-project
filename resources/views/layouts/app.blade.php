@@ -26,51 +26,100 @@
     <!-- Sidebar -->
     <div :class="sidebarOpen ? 'block' : 'hidden'" @click.away="sidebarOpen = false" class="fixed z-20 inset-0 bg-black opacity-50 transition-opacity lg:hidden"></div>
 
-    <div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'" class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-blue-100 overflow-y-auto lg:translate-x-0 lg:static lg:inset-0">
+    <div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
+         class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-blue-100 overflow-y-auto lg:translate-x-0 lg:static lg:inset-0">
+
         <div class="flex items-center justify-center mt-8">
             <div class="flex items-center">
-                <span class="text-2xl font-semibold text-blue-800">Limpieza Inteligente</span>
+                <span class="text-2xl font-semibold text-blue-800">Sis. Citas Medicas</span>
             </div>
         </div>
 
         <nav class="mt-10">
+
+            {{-- GENERAL --}}
             @can('view.index.dashboard')
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('dashboard') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('dashboard') }}">
-                <i class="fas fa-tachometer-alt mr-3"></i>
-                DASHBOARD
-            </a>
+                <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('dashboard') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('dashboard') }}">
+                    <i class="fas fa-tachometer-alt mr-3"></i> DASHBOARD
+                </a>
             @endcan
+
+            {{-- PACIENTES --}}
+            <p class="px-6 mt-6 mb-1 text-xs font-semibold text-blue-400 uppercase tracking-wider">Pacientes</p>
+
             @can('view.index.profile')
-                <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('profile.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('profile.index') }}">
-                    <i class="fas fa-users mr-3"></i>
-                    USUARIOS
+                <a class="flex items-center py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('profile.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('profile.index') }}">
+                    <i class="fas fa-users mr-3"></i> USUARIOS / CONSULTAS
                 </a>
             @endcan
-                @can('view.index.pets')
-                    <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('pets.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('pets.index') }}">
-                        <i class="fas fa-users mr-3"></i>
-                        MASCOTAS
-                    </a>
-                @endcan
-            @can('view.index.product')
-                <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('products.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('products.index') }}">
-                    <i class="fas fa-box mr-3"></i>
-                    PRODUCTOS
-                </a>
-            @endcan
+
             @can('view.index.calendar')
-            <a class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('calendario.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('calendario.index') }}">
-                <i class="fas fa-calendar mr-3"></i>
-                CALENDARIO
-            </a>
+                <a class="flex items-center py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('calendario.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('calendario.index') }}">
+                    <i class="fas fa-calendar mr-3"></i> CALENDARIO
+                </a>
             @endcan
-            <form action="{{ route('logout') }}" method="POST" class="flex items-center mt-4 py-2 px-6 hover:bg-blue-200 text-blue-700 hover:text-blue-900">
-                @csrf
-                <button type="submit">
-                    <i class="fas fa-sign-out-alt mr-3"></i>
-                    SALIR
-                </button>
-            </form>
+
+            {{-- LABORATORIO --}}
+            <p class="px-6 mt-6 mb-1 text-xs font-semibold text-blue-400 uppercase tracking-wider">Laboratorio</p>
+
+            @can('view.index.pets')
+                <a class="flex items-center py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('pets.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('pets.index') }}">
+                    <i class="fas fa-microscope mr-3"></i> ENVIAR A LABORATORIO
+                </a>
+            @endcan
+
+            @can('view.index.calendar')
+                <a class="flex items-center py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('calendario.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('calendario.index') }}">
+                    <i class="fas fa-flask mr-3"></i> RESULTADOS LAB.
+                </a>
+            @endcan
+
+            @can('view.index.calendar')
+                <a class="flex items-center py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('calendario.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('calendario.index') }}">
+                    <i class="fas fa-clipboard-list mr-3"></i> ÓRDENES LAB.
+                </a>
+            @endcan
+
+            {{-- FINANZAS --}}
+            <p class="px-6 mt-6 mb-1 text-xs font-semibold text-blue-400 uppercase tracking-wider">Finanzas</p>
+
+            @can('view.index.calendar')
+                <a class="flex items-center py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('calendario.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('calendario.index') }}">
+                    <i class="fas fa-dollar-sign mr-3"></i> INGRESOS
+                </a>
+            @endcan
+
+            @can('view.index.calendar')
+                <a class="flex items-center py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('calendario.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('calendario.index') }}">
+                    <i class="fas fa-cash-register mr-3"></i> VENTAS Y COBROS
+                </a>
+            @endcan
+
+            @can('view.index.calendar')
+                <a class="flex items-center py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('calendario.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('calendario.index') }}">
+                    <i class="fas fa-chart-line mr-3"></i> REPORTES FINANCIEROS
+                </a>
+            @endcan
+
+            {{-- INVENTARIO --}}
+            <p class="px-6 mt-6 mb-1 text-xs font-semibold text-blue-400 uppercase tracking-wider">Inventario</p>
+
+            @can('view.index.calendar')
+                <a class="flex items-center py-2 px-6 hover:bg-blue-200 {{ request()->routeIs('calendario.index') ? 'bg-blue-200 text-blue-900' : 'text-blue-700 hover:text-blue-900' }}" href="{{ route('calendario.index') }}">
+                    <i class="fas fa-box mr-3"></i> CONTROL DE ENVÍOS
+                </a>
+            @endcan
+
+            {{-- SALIR --}}
+            <div class="border-t border-blue-200 mt-6">
+                <form action="{{ route('logout') }}" method="POST" class="flex items-center mt-2 py-2 px-6 hover:bg-red-100 text-red-500 hover:text-red-700">
+                    @csrf
+                    <button type="submit" class="flex items-center">
+                        <i class="fas fa-sign-out-alt mr-3"></i> SALIR
+                    </button>
+                </form>
+            </div>
+
         </nav>
     </div>
 

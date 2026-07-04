@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Contracts\PetRepositoryInterface;
 use App\Repositories\PetRepository;
 use App\Services\CategoryService;
+use App\Services\ConsultaService;
 use App\Services\EmployeeService;
 use App\Services\Interfaces\CategoryServiceInterface;
 use App\Services\Interfaces\EmployeeServiceInterface;
+use App\Services\Interfaces\IConsultaService;
 use App\Services\Interfaces\InvoiceServiceInterface;
 use App\Services\Interfaces\ProductServiceInterface;
 use App\Services\Interfaces\ProfileServiceInterface;
@@ -50,6 +52,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ReportServiceInterface::class, ReportService::class);
         $this->app->bind(PetRepositoryInterface::class, PetRepository::class);
         $this->app->bind(InvoiceServiceInterface::class, InvoiceService::class);
+        $this->app->bind(IConsultaService::class, ConsultaService::class);
+
 
     }
 

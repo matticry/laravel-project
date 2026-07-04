@@ -33,21 +33,21 @@ class CalendarioController extends Controller
 
     public function index()
     {
-        $countPending = $this->calendarioService->CountPendingOrders();
+//        $countPending = $this->calendarioService->CountPendingOrders();
+//
+//        $countAssigned = $this->calendarioService->CountAuthorizedOrders();
+//
+//        $countCompleted = $this->calendarioService->CountFinishedOrders();
+//
+//        $total = $this->calendarioService->CountTotalOrders();
 
-        $countAssigned = $this->calendarioService->CountAuthorizedOrders();
-
-        $countCompleted = $this->calendarioService->CountFinishedOrders();
-
-        $total = $this->calendarioService->CountTotalOrders();
-
-        $products = $this->productService->getAllProducts()->take(4);
-        $allProducts = $this->productService->getAllProducts();
-        $employees = $this->calendarioService->getEmployees();
-        $services = $this->serviceService->getAllServices()->take(4);
-        $allServices = $this->serviceService->getAllServices();
-        $clients = $this->calendarioService->getClients();
-        return view('calendario.index', compact('employees', 'clients', 'products', 'services', 'allProducts', 'allServices', 'countPending', 'countAssigned', 'countCompleted', 'total'));
+//        $products = $this->productService->getAllProducts()->take(4);
+//        $allProducts = $this->productService->getAllProducts();
+//        $employees = $this->calendarioService->getEmployees();
+//        $services = $this->serviceService->getAllServices()->take(4);
+//        $allServices = $this->serviceService->getAllServices();
+//        $clients = $this->calendarioService->getClients();
+        return view('calendario.index');
     }
 
     public function workOrder()
