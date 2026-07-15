@@ -7,7 +7,10 @@ use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CategoryRedisController;
 use App\Http\Controllers\CedulaController;
+use App\Http\Controllers\ConsultaController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\HistorialClinicoController;
+use App\Http\Controllers\LaboratorioController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -16,7 +19,6 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
 use App\Services\ProfileService;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 
 Auth::routes();
@@ -41,6 +43,15 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('calendario', CalendarioController::class);
     Route::resource('categories-redis', CategoryRedisController::class);
+    Route::resource('consultas', ConsultaController::class);
+
+    // Laboratorios (CRUD)
+    Route::resource('laboratorios', LaboratorioController::class);
+
+
+// routes/web.php
+    Route::get('profile/{id}/consultas', [ProfileController::class, 'getConsultas'])
+        ->name('profile.consultas');
     Route::get('/workOrder', [CalendarioController::class, 'workOrder'])->name('calendario.ordenes');
     Route::patch('/workorders/{workorder}/authorize', [CalendarioController::class, 'authorizeWorkOrder'])->name('workorders.authorize');
     Route::put('/workOrder/{workOrderId}', [CalendarioController::class, 'update'])->name('calendario.update');
@@ -63,6 +74,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pets/search-users', [PetController::class, 'searchUsersForPets'])->name('pets.search-users');
     Route::get('/pets/user-profile/{userId}', [PetController::class, 'userPetsProfile'])->name('pets.user-profile');
     Route::resource('pets', PetController::class);
+
+    // Historial Clínico
+    Route::get('/historial', [HistorialClinicoController::class, 'index'])->name('historial.index');
+    Route::get('/historial/{id}', [HistorialClinicoController::class, 'show'])->name('historial.show');
+    Route::get('/historial/{id}/edit', [HistorialClinicoController::class, 'edit'])->name('historial.edit');
+    Route::put('/historial/{id}', [HistorialClinicoController::class, 'update'])->name('historial.update');
+    Route::post('/historial/{id}/send-email', [HistorialClinicoController::class, 'sendEmail'])->name('historial.send-email');
 
 
 

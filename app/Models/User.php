@@ -49,6 +49,16 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class, 'tbl_rol_user', 'us_id', 'role_id');
     }
+
+    /**
+     * Scope: usuarios que tengan el rol indicado (por nombre, coincidencia parcial, case-insensitive).
+     */
+    public function scopeWithRoleName($query, string $roleName)
+    {
+        return $query->whereHas('roles', function ($q) use ($roleName) {
+            $q->where('rol_name', 'like', '%' . $roleName . '%');
+        });
+    }
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new CustomResetPasswordNotification($token));
@@ -62,21 +72,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Token::class,'usu_id', 'us_id');
 
-    }
-
-    public function pets(): HasMany
-    {
-        return $this->hasMany(Pet::class, 'id_usu', 'us_id');
-    }
-
-    public function activePets(): HasMany
-    {
-        return $this->hasMany(Pet::class, 'id_usu', 'us_id')->where('status_pet', 'A');
-    }
-
-    public function inactivePets(): HasMany
-    {
-        return $this->hasMany(Pet::class, 'id_usu', 'us_id')->where('status_pet', 'I');
     }
 
 }

@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Contracts\PetRepositoryInterface;
 use App\Repositories\PetRepository;
 use App\Services\CategoryService;
+use App\Services\ConsultaService;
 use App\Services\EmployeeService;
 use App\Services\Interfaces\CategoryServiceInterface;
 use App\Services\Interfaces\EmployeeServiceInterface;
+use App\Services\Interfaces\IConsultaService;
 use App\Services\Interfaces\InvoiceServiceInterface;
 use App\Services\Interfaces\ProductServiceInterface;
 use App\Services\Interfaces\ProfileServiceInterface;
@@ -39,17 +41,13 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(UserServiceInterface::class, UserService::class);
-        $this->app->bind(EmployeeServiceInterface::class, EmployeeService::class);
         $this->app->bind(ProductServiceInterface::class, ProductService::class);
-        $this->app->bind(ServiceServiceInterface::class, ServiceService::class);
-        $this->app->bind(TaskServiceInterface::class, TaskService::class);
         $this->app->bind(ProfileServiceInterface::class, ProfileService::class);
         $this->app->bind(RoleServiceInterface::class, RoleService::class);
         $this->app->bind(CategoryServiceInterface::class, CategoryService::class);
-        $this->app->bind(WorkOrderRepositoryInterface::class, WorkOrderService::class);
-        $this->app->bind(ReportServiceInterface::class, ReportService::class);
         $this->app->bind(PetRepositoryInterface::class, PetRepository::class);
-        $this->app->bind(InvoiceServiceInterface::class, InvoiceService::class);
+        $this->app->bind(IConsultaService::class, ConsultaService::class);
+
 
     }
 

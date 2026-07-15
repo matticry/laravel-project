@@ -3,19 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\User;
 use App\Models\WorkOrder;
 use App\Services\Interfaces\ProductServiceInterface;
-use App\Services\Interfaces\ServiceServiceInterface;
-use App\Services\Interfaces\WorkOrderRepositoryInterface;
-use App\Services\WorkOrderService;
 use DateTime;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
-use InvalidArgumentException;
 
 class CalendarioController extends Controller
 {
@@ -23,12 +16,9 @@ class CalendarioController extends Controller
 
 
 
-    public function __construct(WorkOrderService $calendarioService, ServiceServiceInterface $serviceService, ProductServiceInterface $productService, WorkOrderRepositoryInterface $workOrderRepository)
+    public function __construct( ProductServiceInterface $productService)
     {
-        $this->calendarioService = $calendarioService;
-        $this->serviceService = $serviceService;
         $this->productService = $productService;
-        $this->workOrderService = $workOrderRepository;
     }
 
     public function index()

@@ -64,7 +64,42 @@ class ProfileController extends Controller
         }
 
     }
+// ProfileController.php
+    public function getConsultas($id)
+    {
+        $user = Profile::with([
+            'consultas.historialClinico',
+        ])->findOrFail($id);
 
+        $consultas = $user->consultas
+            ->sortByDesc('fecha_registro')
+            ->values()
+            ->map(function ($consulta) {
+                return [
+                    'id_co'           => $consulta->id_co,
+                    'motivo'          => $consulta->motivo,
+                    'fecha_registro'  => $consulta->fecha_registro?->format('d/m/Y H:i'),
+                    'historial'       => $consulta->historialClinico ? [
+                        'id_historial_clinico'                => $consulta->historialClinico->id_historial_clinico,
+                        'motivo_consulta'                     => $consulta->historialClinico->motivo_consulta,
+                        'antecedentes_patologicos_familiares' => $consulta->historialClinico->antecedentes_patologicos_familiares,
+                        'antecedentes_patologicos_personales' => $consulta->historialClinico->antecedentes_patologicos_personales,
+                        'antecedentes_oculares_familiares'    => $consulta->historialClinico->antecedentes_oculares_familiares,
+                        'antecedentes_oculares_personales'    => $consulta->historialClinico->antecedentes_oculares_personales,
+                        'utiliza_lentes'                      => $consulta->historialClinico->utiliza_lentes,
+                        'tipo_lente'                          => $consulta->historialClinico->tipo_lente,
+                        'fecha_inicio_uso_lentes'             => $consulta->historialClinico->fecha_inicio_uso_lentes?->format('Y-m-d'),
+                        'observaciones'                       => $consulta->historialClinico->observaciones,
+                    ] : null,
+                ];
+            })
+            ->unique('id_co')
+            ->values();
+
+        return response()->json([
+            'consultas' => $consultas,
+        ]);
+    }
     public function edit($id)
     {
         $roles = Role::all();
@@ -75,27 +110,18 @@ class ProfileController extends Controller
     public function update(Request $request, $id)
     {
 
-        try {
-            $validatedData = $request->validate([
-                'us_dni' => 'required|string|max:10',
-                'us_name' => 'required|string|max:255',
-                'us_lastName' => 'required|string|max:255',
-                'us_status' => 'required|in:A,I',
-                'roles' => 'array'
-            ]);
-            $user = $this->profileService->updateUser($id, $validatedData);
-            if (!$user) {
-                return redirect()->back()->with('error', 'Error al actualizar el usuario');
-            }
-            return redirect()->route('profile.index')->with('success', 'Usuario actualizado correctamente');
-        } catch (ValidationException  $e) {
-            $errors = $e->validator->errors()->toArray();
-            $errorMessage = "Valida bien estos datos:\n";
-            foreach ($errors as $key => $value) {
-                $errorMessage .= $key . ": " . implode(", ", $value) . "\n";
-            }
-            return back()->withErrors('error' . $errorMessage)->withInput();
+        $validatedData = $request->validate([
+            'us_dni' => 'required|string|max:10',
+            'us_name' => 'required|string|max:255',
+            'us_lastName' => 'required|string|max:255',
+            'us_status' => 'required|in:A,I',
+            'roles' => 'array'
+        ]);
+        $user = $this->profileService->updateUser($id, $validatedData);
+        if (!$user) {
+            return redirect()->back()->with('error', 'Error al actualizar el usuario');
         }
+        return redirect()->route('profile.index')->with('success', 'Usuario actualizado correctamente');
 
     }
 

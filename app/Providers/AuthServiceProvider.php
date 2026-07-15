@@ -170,8 +170,8 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasPermission('button.create.ordenes');
         });
 
-        Gate::define('view.index.pets', function ($user) {
-            return $user->hasPermission('view.index.pets');
+        Gate::define('view.index.laboratorio', function ($user) {
+            return $user->hasPermission('view.index.laboratorio');
         });
         Gate::define('pet.store', function ($user) {
             return $user->hasPermission('pet.store');
@@ -182,6 +182,19 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('pet.destroy', function ($user) {
             return $user->hasPermission('pet.destroy');
         });
+        Gate::define('laboratorio.store', function ($user) {
+            return $user->hasPermission('laboratorio.destroy');
+        });
+        Gate::define('laboratorio.update', function ($user) {
+            return $user->hasPermission('laboratorio.destroy');
+        });
+        Gate::define('laboratorio.destroy', function ($user) {
+            return $user->hasPermission('laboratorio.destroy');
+        });
+        Gate::define('consultas.store', function ($user) {
+            return $user->hasPermission('consultas.store');
+        });
+
 
 
 

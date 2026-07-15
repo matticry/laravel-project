@@ -149,7 +149,7 @@ class AuthController extends Controller
                 'session' => $request->session()->all()
             ]);
 
-            return redirect()->intended('calendario');
+            return redirect()->intended('profile');
         }
 
         RateLimiter::hit($key, 300); // 300 segundos = 5 minutos

@@ -26,34 +26,19 @@ class Profile extends Model
         'created_at' => 'datetime',
     ];
 
+    public function consultas(): HasMany
+    {
+        return $this->hasMany(Consulta::class, 'id_paciente', 'us_id');
+    }
+
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'tbl_rol_user', 'us_id', 'role_id');
     }
 
-    public function pets(): HasMany
-    {
-        return $this->hasMany(Pet::class, 'id_usu', 'us_id');
-    }
-
-    public function activePets(): HasMany
-    {
-        return $this->hasMany(Pet::class, 'id_usu', 'us_id')->where('status_pet', 'A');
-    }
-
-    public function inactivePets(): HasMany
-    {
-        return $this->hasMany(Pet::class, 'id_usu', 'us_id')->where('status_pet', 'I');
-    }
     public function isEmailVerified(): bool
     {
         return !is_null($this->email_verified_at);
-    }
-    public function showModal()
-    {
-        $users = Profile::select('us_id as id', 'us_name as name', 'us_image as picture')->get();
-
-        return view('categories.index', compact('users'));
     }
 
 }
